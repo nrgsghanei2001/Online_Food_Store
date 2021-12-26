@@ -4,5 +4,9 @@ from .models import *
 
 
 admin.site.register(Category)
+admin.site.register(Meal)
 admin.site.register(Restaurant)
 admin.site.register(Branch)
+admin.site.register(Food)
+admin.site.register(Menu)
+
