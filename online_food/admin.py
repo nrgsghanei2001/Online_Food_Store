@@ -77,7 +77,7 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
     list_display = ['customer', 'last_purchase']
-    list_filter = ['customer']
+    list_filter = ['customer', 'last_purchase']
     search_fields = ['customer']
 
 
