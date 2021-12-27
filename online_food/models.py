@@ -84,7 +84,7 @@ class Order(models.Model):
     address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='orders')
     order_time = models.DateTimeField(auto_now_add=True)
     customers_status = models.CharField(max_length=1, choices=CUSTOMERS_STATUS, default='a')
-    restaurnat_status = models.CharField(max_length=1, choices=RESTAURANT_STATUS, default='r')
+    restaurnt_status = models.CharField(max_length=1, choices=RESTAURANT_STATUS, default='r')
 
     def __str__(self):
         return f"{self.customer} {self.get_customers_status_display()}"
