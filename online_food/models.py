@@ -96,4 +96,4 @@ class Invoice(models.Model):
     last_purchase = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.customer
+        return self.customer.user.username
