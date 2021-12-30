@@ -42,7 +42,16 @@ class BranchAdmin(admin.ModelAdmin):
     
     @admin.display(description='menu')
     def menu_display(self, obj):
-        return " , ".join(ad.food.name for ad in obj.menu.all())
+        return " , ".join(ad.food.name for ad in obj.menu.item.all())
+
+
+@admin.register(MenuItem)
+class MenuItemAdmin(admin.ModelAdmin):
+    list_display = ['food', 'price', 'number_of_existance']
+    list_editable = ['price', 'number_of_existance']
+    list_filter = ['food', 'price', 'number_of_existance']
+    search_fields = ['food', 'price', 'number_of_existance']
+
 
 
 @admin.register(Food)
@@ -58,9 +67,16 @@ class FoodAdmin(admin.ModelAdmin):
 
 @admin.register(Menu)
 class MenuAdmin(admin.ModelAdmin):
-    list_display = ['food', 'price', 'number_of_existance']
-    list_editable = ['price', 'number_of_existance']
-    search_fields = ['price']
+    list_display = ['items', 'restaurant']
+    
+
+    @admin.display(description='menu items')
+    def items(self, obj):
+        return " , ".join(ad.food.name for ad in obj.item.all())
+
+    @admin.display(description='related restaurant')
+    def restaurant(self, obj):
+        return obj.branches
     
 
 @admin.register(Order)

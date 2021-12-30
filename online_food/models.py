@@ -34,7 +34,7 @@ class Restaurant(models.Model):
 class Branch(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='branches')
     address = models.OneToOneField(Address, on_delete=models.CASCADE, related_name="branch")
-    menu = models.ManyToManyField('Menu', related_name='branches')
+    menu = models.OneToOneField('Menu', on_delete=models.CASCADE, related_name='branches')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='branches')
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE, related_name='branches')
     details = models.TextField()
@@ -58,14 +58,22 @@ class Food(models.Model):
         return self.name
 
 
-class Menu(models.Model):
-    food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='menus')
+class MenuItem(models.Model):
+    food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='menuItems')
     price = models.FloatField()
     number_of_existance = models.PositiveIntegerField()
 
 
     def __str__(self) -> str:
-        return f"food: {self.food}'\n'price: {self.price}'\n'number: {self.number_of_existance}"
+        return f"food: {self.food.name}'\n'price: {self.price}'\n'number: {self.number_of_existance}"
+
+
+class Menu(models.Model):
+    item = models.ManyToManyField(MenuItem, related_name='menus')
+
+
+    def __str__(self):
+        return " , ".join(item.food.name for item in self.item.all())
 
 
 class Order(models.Model):
