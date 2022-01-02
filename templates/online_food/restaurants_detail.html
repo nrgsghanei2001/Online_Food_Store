@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container mt-4">
+        <a class="btn btn-danger" href="{% url 'all_restaurants' %}">Back</a>
+        <div>
+        <h5>Restaurant: </h5>
+        <h6>{{branch.restuarant}}</h6>
+        </div>
+        <hr>
+        <div>
+        <h5>Address:</h5>
+        <h6> {{branch.address}}</h6></div>
+        <hr>
+        <div>
+        <h5>Menu:</h5>
+        <h6><a href="{% url 'restaurants_menu' branch.pk %}" class="btn btn-info">Show</a></h6></div>
+        <hr>
+        <h5>Category:</h5>
+        <h6>{{branch.category}}</h6></div>
+        <hr>
+        <h5>Meal: </h5>
+        <h6>{{branch.meal}}</h6>
+        <hr>
+        <h5>Detail: </h5>
+        <h6>{{branch.details}}</h6>
+        <hr>
+        <h5>Date of Register: </h5>
+        <h6>{{branch.date_of_register}}</h6>
+    </div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a class="btn btn-danger" href="{% url 'restaurants_detail' branch.pk %}">Back</a>
+    {% for f in branch.menu.item.all %}
+        <h3>{{f.food.name}}</h3>
+        <h3>{{f.food.detail}}</h3>
+        {% for c in f.food.category.all %}
+            <h4>{{c}}</h4>
+        {% endfor %}
+        <h3>{{f.food.meal}}</h3>
+        <h3>{{f.food.date_of_record}}</h3>
+        <img src="media/{{f.food.image}}" alt="" style="height:200px">
+        {{f.food.image}}
+        <hr>
+        {% comment %} <h3>{{f.food}}</h3>
+        <h3>{{f.food}}</h3> {% endcomment %}
+    {% endfor %}
+</body>
+</html>
