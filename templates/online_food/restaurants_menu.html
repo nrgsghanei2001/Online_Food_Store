@@ -34,17 +34,14 @@
         </form>
         
         <hr>
-        {% comment %} <h3>{{f.food}}</h3>
-        <h3>{{f.food}}</h3> {% endcomment %}
+
     {% endfor %}
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     {% load static %}
     <script>
-        {% comment %} {% comment %} var title = document.getElementById('title'); {% endcomment %}
         var CSRF_TOKEN = '{{ csrf_token }}';
         var URL = "{% url 'add_to_cart' %}"
-        {% comment %} var URL = "{% url 'post_task' %}" {% endcomment %}
     </script>
     
     <script src={% static 'add_food.js' %}></script>

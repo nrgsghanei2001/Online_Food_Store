@@ -9,7 +9,7 @@
 <body>
     <p>cart page for {{request.user}}</p>
     {% for ord in object_list %}
-        {% if ord.customer.user == request.user %}
+        {% if ord.customer.user == request.user and ord.customers_status == 'a' %}
             {% for o in ord.menu.all %}
                 <li>{{o.item.food.name}}</li>
                 <h5>{{o.number}}</h5>
@@ -20,5 +20,18 @@
             <h3>total price: {{ord.total_price}}</h3>
         {% endif %}
     {% endfor %}
+    <form method="POST" id="form" action="{% url 'home' %}">
+        {% csrf_token %}
+        <button type="submit">CONFIRM PURCHASE</button>
+        <a href="{% url 'home' %}"></a>
+    </form>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    {% load static %}
+    <script>
+        var CSRF_TOKEN = '{{ csrf_token }}';
+        var URL = "{% url 'invoice' %}"
+    </script>
+    
+    <script src={% static 'invoice.js' %}></script>
 </body>
 </html>

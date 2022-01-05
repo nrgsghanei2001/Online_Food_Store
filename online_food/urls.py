@@ -1,4 +1,6 @@
 from django.urls import path
+
+from online_food.models import Invoice
 from .views import *
 from django.conf import settings
 from django.conf.urls.static import static
@@ -11,6 +13,7 @@ urlpatterns = [
     path('all/restaurants/<int:pk>', RestaurantDetail.as_view(), name='restaurants_detail'),
     path('all/restaurants/menu/<int:pk>', Menu.as_view(), name='restaurants_menu'),
     path('cart/', Cart.as_view(), name='cart'),
+    path('invoices/', invoice, name='invoice'),
     
 ]
 
