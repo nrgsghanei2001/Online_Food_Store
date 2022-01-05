@@ -2,9 +2,15 @@ from django.db import models
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, TemplateView
+from rest_framework import generics, viewsets, permissions, response, status
+from rest_framework.views import APIView
 from accounts.models import Customer
-
-from online_food.models import Branch, Invoice, MenuItem, Order, OrderItem, Restaurant
+from .serializers import *
+from online_food.models import Branch, Food, Invoice, MenuItem, Order, OrderItem, Restaurant
+from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
 
 
 def home_page(request):
@@ -87,3 +93,42 @@ def invoice(request):
         return JsonResponse({})
 
     return JsonResponse({})
+
+
+class AllFoods(APIView):
+    # serializer_class = FoodSerializer
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'online_food/all_foods.html'
+
+    def get(self, request):
+        queryset = Food.objects.all()
+        return Response({'object_list': queryset})
+
+    # def post(self, request):
+    #     food = get_object_or_404(Food)
+    #     serializer = FoodSerializer(food, data=request.data)
+    #     if not serializer.is_valid():
+    #         return Response({'serializer': serializer, 'object_list': food})
+    #     serializer.save()
+    #     return redirect('food-list')
+
+    # queryset = Food.objects.all()
+    # model = Food
+    # template_name = 'online_food/add_food_admin.html'
+
+
+
+# class PopularFoods(ListView):
+#     model = Invoice
+#     template_name = 'online_food/popular_foods.html'
+
+#     def get_queryset(self):
+#         all_invoices = Invoice.objects.all()
+#         for invoice in all_invoices:
+#             orders = invoice.foods.all()
+#             for order in orders:
+#                 order_items = order.menu.all()
+
+#         return query_set
+
+
