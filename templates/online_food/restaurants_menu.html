@@ -19,14 +19,17 @@
         <h3>{{f.food.date_of_record}}</h3>
         <h3>{{f.price}}</h3>
         <h3>{{f.number_of_existance}}</h3>
-        <img src="media/{{f.food.image}}" alt="" style="height:200px">
+        <img src="/media/{{f.food.image}}" alt="" style="height:200px">
         {{f.food.image}}
         <br>
         <br>
         <br>
         <form method="POST" id="form" action="{% url 'add_to_cart' %}">
             {% csrf_token %}
+            <lable>number</lable>
             <input type="text" id="number_{{f.pk}}"> 
+            <br>
+            <br>
             <button type="button" class="registerbtn" id="{{f.pk}}">ADD TO CART</button>
             <a href="{% url 'restaurants_menu' branch.pk %}"></a>
         </form>

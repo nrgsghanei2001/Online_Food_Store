@@ -58,3 +58,8 @@ def add_to_cart(request):
         return JsonResponse({})
 
     return JsonResponse({})
+
+
+class Cart(ListView):
+    model = Order
+    template_name = 'online_food/cart.html'

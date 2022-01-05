@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+</head>
+<body>
+    <p>cart page for {{request.user}}</p>
+    {% for ord in object_list %}
+        {% if ord.customer.user == request.user %}
+            {% for o in ord.menu.all %}
+                <li>{{o.item.food.name}}</li>
+                <h5>{{o.number}}</h5>
+                <h5>{{o.price}}</h5>
+            {% endfor %}
+            <h3>total price: {{ord.total_price}}</h3>
+        {% endif %}
+    {% endfor %}
+</body>
+</html>
