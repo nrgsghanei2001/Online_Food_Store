@@ -14,6 +14,8 @@
                 <li>{{o.item.food.name}}</li>
                 <h5>{{o.number}}</h5>
                 <h5>{{o.price}}</h5>
+                <img src="/media/{{o.item.food.image}}" alt="" style="height:200px">
+                <hr>
             {% endfor %}
             <h3>total price: {{ord.total_price}}</h3>
         {% endif %}
