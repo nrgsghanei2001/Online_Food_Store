@@ -37,26 +37,24 @@ def add_to_cart(request):
         menu_item = MenuItem.objects.get(id=menu_item)
         number=text.get('number')
         branch = menu_item.menus.get().branches
-        # print(menu_item)
-        # print(number)
         price = int(number) * menu_item.price
-        print(price)
+        # print(price)
         customer = Customer.objects.get(user=request.user)
-        # print(customer)
         flag = False 
         order_item = OrderItem.objects.create(item=menu_item, number=number, price=price)
         for obj in Order.objects.all():
             if obj.customer == customer:
                 flag = True
+                new_price = obj.total_price + price
                 obj.menu.add(order_item)
+                obj.total_price = new_price
+                obj.save()
+                print(obj.total_price)
+                
         if not flag:
-            order = Order.objects.create(customer=customer, restaurant=branch)
+            order = Order.objects.create(customer=customer, restaurant=branch, total_price=price)
             order.menu.add(order_item)
 
-        # menu
-        # print(branch)
-        # print(food)
-        # print(request.user)
         return JsonResponse({})
 
     return JsonResponse({})

@@ -81,9 +81,9 @@ class MenuAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['customer', 'restaurant', 'customers_status', 'restaurnt_status']
-    list_filter = ['customer', 'restaurant', 'customers_status', 'restaurnt_status']
-    search_fields = ['customer', 'restaurant', 'customers_status', 'restaurnt_status']
+    list_display = ['customer', 'restaurant', 'customers_status', 'restaurant_status']
+    list_filter = ['customer', 'restaurant', 'customers_status', 'restaurant_status']
+    search_fields = ['customer', 'restaurant', 'customers_status', 'restaurant_status']
     
     # @admin.display(description='menu')
     # def menu_list(self, obj):
