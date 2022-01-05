@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,11 +17,34 @@
         {% endfor %}
         <h3>{{f.food.meal}}</h3>
         <h3>{{f.food.date_of_record}}</h3>
+        <h3>{{f.price}}</h3>
+        <h3>{{f.number_of_existance}}</h3>
         <img src="media/{{f.food.image}}" alt="" style="height:200px">
         {{f.food.image}}
+        <br>
+        <br>
+        <br>
+        <form method="POST" id="form" action="{% url 'add_to_cart' %}">
+            {% csrf_token %}
+            <input type="text" id="number_{{f.pk}}"> 
+            <button type="button" class="registerbtn" id="{{f.pk}}">ADD TO CART</button>
+            <a href="{% url 'restaurants_menu' branch.pk %}"></a>
+        </form>
+        
         <hr>
         {% comment %} <h3>{{f.food}}</h3>
         <h3>{{f.food}}</h3> {% endcomment %}
     {% endfor %}
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    {% load static %}
+    <script>
+        {% comment %} {% comment %} var title = document.getElementById('title'); {% endcomment %}
+        var CSRF_TOKEN = '{{ csrf_token }}';
+        var URL = "{% url 'add_to_cart' %}"
+        {% comment %} var URL = "{% url 'post_task' %}" {% endcomment %}
+    </script>
+    
+    <script src={% static 'add_food.js' %}></script>
 </body>
 </html>

@@ -76,6 +76,15 @@ class Menu(models.Model):
         return " , ".join(item.food.name for item in self.item.all())
 
 
+class OrderItem(models.Model):
+    item = models.ForeignKey(MenuItem, on_delete=models.CASCADE, related_name='order_items')
+    number = models.PositiveIntegerField()
+    price = models.FloatField()
+
+    def __str__(self) -> str:
+        return self.item.food.name
+
+
 class Order(models.Model):
     CUSTOMERS_STATUS = (('a', 'added'),
     ('c', 'confirmed'),
@@ -88,8 +97,8 @@ class Order(models.Model):
 
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='orders')
     restaurant = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='orders')
-    menu = models.ManyToManyField(Menu, related_name='orders')
-    address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='orders')
+    menu = models.ManyToManyField(OrderItem, related_name='orders')
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='orders', blank=True, null=True)
     order_time = models.DateTimeField(auto_now_add=True)
     customers_status = models.CharField(max_length=1, choices=CUSTOMERS_STATUS, default='a')
     restaurnt_status = models.CharField(max_length=1, choices=RESTAURANT_STATUS, default='r')

@@ -1,8 +1,10 @@
 from django.db import models
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, TemplateView
+from accounts.models import Customer
 
-from online_food.models import Branch
+from online_food.models import Branch, MenuItem, Order, OrderItem, Restaurant
 
 
 def home_page(request):
@@ -26,3 +28,35 @@ class RestaurantDetail(DetailView):
 class Menu(DetailView):
     model = Branch
     template_name = 'online_food/restaurants_menu.html' 
+
+
+def add_to_cart(request):
+    if request.method == 'POST'  and request.is_ajax():
+        text = request.POST
+        menu_item=text.get('menu_item')
+        menu_item = MenuItem.objects.get(id=menu_item)
+        number=text.get('number')
+        branch = menu_item.menus.get().branches
+        # print(menu_item)
+        # print(number)
+        price = int(number) * menu_item.price
+        print(price)
+        customer = Customer.objects.get(user=request.user)
+        # print(customer)
+        flag = False 
+        order_item = OrderItem.objects.create(item=menu_item, number=number, price=price)
+        for obj in Order.objects.all():
+            if obj.customer == customer:
+                flag = True
+                obj.menu.add(order_item)
+        if not flag:
+            order = Order.objects.create(customer=customer, restaurant=branch)
+            order.menu.add(order_item)
+
+        # menu
+        # print(branch)
+        # print(food)
+        # print(request.user)
+        return JsonResponse({})
+
+    return JsonResponse({})

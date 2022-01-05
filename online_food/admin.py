@@ -81,13 +81,13 @@ class MenuAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['customer', 'restaurant', 'menu_list', 'customers_status', 'restaurnt_status']
+    list_display = ['customer', 'restaurant', 'customers_status', 'restaurnt_status']
     list_filter = ['customer', 'restaurant', 'customers_status', 'restaurnt_status']
     search_fields = ['customer', 'restaurant', 'customers_status', 'restaurnt_status']
     
-    @admin.display(description='menu')
-    def menu_list(self, obj):
-        return " , ".join(ad.food.name for ad in obj.menu.all())
+    # @admin.display(description='menu')
+    # def menu_list(self, obj):
+    #     return " , ".join(ad.food.name for ad in obj.menu.all())
 
 
 @admin.register(Invoice)
@@ -97,3 +97,4 @@ class InvoiceAdmin(admin.ModelAdmin):
     search_fields = ['customer']
 
 
+admin.site.register(OrderItem)
