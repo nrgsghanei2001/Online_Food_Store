@@ -17,13 +17,17 @@ class Address(models.Model):
 
 
 class Customer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customers')
-    email = models.EmailField(blank=True)
-    address = models.ManyToManyField(Address, related_name='customers', blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customers', null=True, blank=True)
+    email = models.EmailField(blank=True, null=True)
+    address = models.ManyToManyField(Address, related_name='customers', blank=True, null=True)
+    device = models.CharField(max_length=200, null=True, blank=True)
 
 
     def __str__(self):
-        return self.user.username
+        if self.user:
+            return self.user.username
+        else:
+            return self.device
    
 
 class Staff(models.Model):

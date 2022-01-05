@@ -45,7 +45,15 @@ def add_to_cart(request):
         branch = menu_item.menus.get().branches
         price = int(number) * menu_item.price
         # print(price)
-        customer = Customer.objects.get(user=request.user)
+        try:
+            customer = Customer.objects.get(user=request.user)
+        except:
+            device = request.COOKIES['device']
+            try:
+                customer = Customer.objects.get(device=device)
+            except:
+                customer = Customer.objects.get_or_create(device=device)
+            print(customer)
         flag = False 
         order_item = OrderItem.objects.create(item=menu_item, number=number, price=price)
         for obj in Order.objects.all():
@@ -58,6 +66,8 @@ def add_to_cart(request):
                 print(obj.total_price)
                 
         if not flag:
+            print("ding")
+            print(type(customer))
             order = Order.objects.create(customer=customer, restaurant=branch, total_price=price)
             order.menu.add(order_item)
 
@@ -65,10 +75,19 @@ def add_to_cart(request):
 
     return JsonResponse({})
 
+def cart(request):
+    try:
+        customer = Customer.objects.get(user=request.user)
+    except:
+        device = request.COOKIES['device']
+        customer = Customer.objects.get(device=device)
+    order = Order.objects.filter(customer=customer)
+    context = {'order': order}
+    return render(request, 'online_food/cart.html', context)
 
-class Cart(ListView):
-    model = Order
-    template_name = 'online_food/cart.html'
+# class Cart(ListView):
+#     model = Order
+#     template_name = 'online_food/cart.html'
 
 
 def invoice(request):

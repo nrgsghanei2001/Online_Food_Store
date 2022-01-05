@@ -12,8 +12,15 @@ class AddressAdmin(admin.ModelAdmin):
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ['user', 'email', 'user_info']
+    list_display = ['users', 'email', 'user_info']
     list_editable = ['email']
+
+    @admin.display(description='user')
+    def users(self, obj):
+        if obj.user:
+            return obj.user.username
+        else:
+            return obj.device
 
     @admin.display(description='user info')
     def user_info(self, obj):
