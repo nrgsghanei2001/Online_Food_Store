@@ -52,18 +52,20 @@ def add_to_cart(request):
             try:
                 customer = Customer.objects.get(device=device)
             except:
-                customer = Customer.objects.get_or_create(device=device)
+                customer = Customer.objects.create(device=device)
             print(customer)
         flag = False 
         order_item = OrderItem.objects.create(item=menu_item, number=number, price=price)
         for obj in Order.objects.all():
-            if obj.customer == customer and obj.customers_status == 'a':
+            if obj.customer == customer and obj.customers_status == 'a' and obj.restaurant == branch:
                 flag = True
                 new_price = obj.total_price + price
                 obj.menu.add(order_item)
                 obj.total_price = new_price
                 obj.save()
                 print(obj.total_price)
+            elif obj.restaurant != branch:
+                obj.delete()
                 
         if not flag:
             print("ding")
