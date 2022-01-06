@@ -7,6 +7,47 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <form method="POST" id="form" action="{% url 'home' %}">
+        {% csrf_token %}
+        <div class="container">
+          <h2>ADD FOOD</h2>
+          <hr>
+          <label for="name"><b>Name</b></label>
+          <input type="text" placeholder="Enter the food's name" name="name" id="name" required>
+          <br>
+          <label for="detail"><b>Detail</b></label><br>
+          <div class="col-75">
+            <textarea id="detail" name="detail" placeholder="Enter the details here..." style="height:200px"></textarea>
+          </div>
+          <label for="category"><b>Choose the category</b></label><br>
+          <select name="category" id="category" required>
+            {% for obj in categories %}
+            <option value={{obj.name}}>{{obj.name}}</option>
+            {% endfor %}
+          </select>
+          <br>
+          <label for="meal"><b>Choose the meal</b></label><br>
+          <select name="meal" id="meal" required>
+            {% for obj in meals %}
+            <option value={{obj.meal}}>{{obj.meal}}</option>
+            {% endfor %}
+          </select>
+          <br>
+          <br>
+          <label for="image"><b>Image<b></label>
+          <br>
+          <input type="file" id="image" name="image" required>
+          <hr>
+          <button type="submit" class="registerbtn" id="submit">ADD FOOD</button>
+        </div>
+        <a href="{% url 'add_food' %}"></a>
+    </form>
+    {% load static %}
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+        var CSRF_TOKEN = '{{ csrf_token }}';
+        var URL = "{% url 'add_food' %}"
+    </script>
+    <script src={% static 'add_foods.js' %}></script>
 </body>
 </html>

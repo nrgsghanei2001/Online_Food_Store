@@ -1,7 +1,7 @@
 from django.db import models
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic import ListView, DetailView, TemplateView, detail
 from rest_framework import generics, viewsets, permissions, response, status
 from rest_framework.views import APIView
 from accounts.models import Customer
@@ -18,7 +18,25 @@ def home_page(request):
 
 
 def add_food(request):
-    return render(request, 'online_food/add_food.html')
+    if request.method == 'POST'  and request.is_ajax():
+        text = request.POST
+        name = text['name']
+        detail = text['detail']
+        category = text['category']
+        category = Category.objects.get(name=category)
+        meal = text['meal']
+        meal = Meal.objects.get(meal=meal)
+        image = text['image']
+        food = Food.objects.create(name=name, detail=detail, meal=meal, image=image)
+        food.category.add(category)
+        food.save()
+        return JsonResponse({"text":text})
+    
+    categories = Category.objects.all()
+    meals = Meal.objects.all()
+    context = {'categories' : categories, 
+    'meals' : meals}
+    return render(request, 'online_food/add_food.html', context)
 
 
 class AllRestaurants(ListView):
@@ -42,7 +60,7 @@ def add_to_cart(request):
         menu_item=text.get('menu_item')
         menu_item = MenuItem.objects.get(id=menu_item)
         number=text.get('number')
-        branch = menu_item.menus.get().branches
+        branch = menu_item.menus.last().branches
         price = int(number) * menu_item.price
         # print(price)
         try:
@@ -63,7 +81,7 @@ def add_to_cart(request):
                 obj.menu.add(order_item)
                 obj.total_price = new_price
                 obj.save()
-                print(obj.total_price)
+                # print(obj.total_price)
             elif obj.restaurant != branch:
                 obj.delete()
                 

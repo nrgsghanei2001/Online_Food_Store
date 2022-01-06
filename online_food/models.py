@@ -13,11 +13,11 @@ class Category(models.Model):
 
 
 class Meal(models.Model):
-    MEAL_CHOICES = (('bf', 'Break Fast'),
-    ('ld', 'Lunch And Dinner'),
-    ('sn', 'Snack'))
+    MEAL_CHOICES = (('Break Fast', 'Break Fast'),
+    ('Lunch And Dinner', 'Lunch And Dinner'),
+    ('Snack', 'Snack'))
 
-    meal = models.CharField(max_length=2, choices=MEAL_CHOICES, default='ld')
+    meal = models.CharField(max_length=20, choices=MEAL_CHOICES, default='Lunch And Dinner')
 
 
     def __str__(self):
@@ -46,7 +46,7 @@ class Branch(models.Model):
         return jdatetime.datetime.fromgregorian(datetime=self.date_of_register)
 
     def __str__(self) -> str:
-        return f"{self.restaurant}'\n'branch: {self.address} {self.created_at_jalali}"
+        return f"{self.restaurant}'\n'branch: {self.address} {self.date_of_register_jalali}"
 
 
 class Food(models.Model):
