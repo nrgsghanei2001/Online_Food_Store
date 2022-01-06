@@ -1,0 +1,36 @@
+{% extends './base.html' %}
+{% block title %}
+<title>Admin Pannel</title>
+{% endblock title %}
+
+{% block header %}
+<div class="jumbotron">
+    <div class="container text-center">
+      <h1 style="color:orange;">Admin Pannel</h1>      
+    </div>
+  </div>
+  
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid" style="background-color: rgb(255, 150, 100);">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>                        
+        </button>
+        <a class="navbar-brand" href="#">Logo</a>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar" color="yellow">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="{% url 'home' %}">Home</a></li>
+          <li><a href={% url 'all_foods' %}>Foods</a></li>
+          <li><a href={% url 'add_food' %}>Add Food</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+{% endblock header %}
+
+
+
+

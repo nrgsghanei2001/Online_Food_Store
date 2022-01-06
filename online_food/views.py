@@ -17,6 +17,10 @@ def home_page(request):
     return render(request, 'online_food/home.html')
 
 
+def admin_page(request):
+    return render(request, 'online_food/admin.html')
+
+    
 def add_food(request):
     if request.method == 'POST'  and request.is_ajax():
         text = request.POST
@@ -139,7 +143,6 @@ def invoice(request):
 
 
 class AllFoods(APIView):
-    # serializer_class = FoodSerializer
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'online_food/all_foods.html'
 
@@ -158,20 +161,14 @@ def delete_food(request):
 
 
 def delete_item(request):
-    # print("hhhhhhhhh")
     if request.method == 'POST'  and request.is_ajax():
         text = request.POST
-        # print(text)
         order_item = OrderItem.objects.get(pk=text['order_item'])
-        # print(order_item, type(order_item))
         order = order_item.orders.last()
-        print(order.total_price)
         order.total_price -= order_item.price
-        print(order.total_price)
         order_item.delete()
         order.save()
         return render(request, 'online_food/cart.html')
-    # print("hey")
     return render(request, 'online_food/cart.html')
 
 # class PopularFoods(ListView):

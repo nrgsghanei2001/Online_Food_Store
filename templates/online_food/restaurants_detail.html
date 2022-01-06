@@ -3,36 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container mt-4">
+    <div class="container">
+        <br>
+        <br>
         <a class="btn btn-danger" href="{% url 'all_restaurants' %}">Back</a>
-        <div>
-        <h5>Restaurant: </h5>
-        <h6>{{branch.restuarant}}</h6>
-        </div>
-        <hr>
-        <div>
-        <h5>Address:</h5>
-        <h6> {{branch.address}}</h6></div>
-        <hr>
-        <div>
-        <h5>Menu:</h5>
-        <h6><a href="{% url 'restaurants_menu' branch.pk %}" class="btn btn-info">Show</a></h6></div>
-        <hr>
-        <h5>Category:</h5>
-        <h6>{{branch.category}}</h6></div>
-        <hr>
-        <h5>Meal: </h5>
-        <h6>{{branch.meal}}</h6>
-        <hr>
-        <h5>Detail: </h5>
-        <h6>{{branch.details}}</h6>
-        <hr>
-        <h5>Date of Register: </h5>
-        <h6>{{branch.date_of_register_jalali}}</h6>
+        <br>
+        <br>
+        <h2>Restaurant's Details</h2>         
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Meal</th>
+              <th>Details</th>
+              <th>Address</th>
+              <th>Menu</th>
+            </tr>
+          </thead>
+          <tbody>
+                <tr>
+                    <td>{{branch.restaurant}}</td>
+                    <td>{{branch.category}}</td>
+                    <td>{{branch.meal}}</td>
+                    <td>{{branch.details}}</td>
+                    <td>{{branch.address}}</td>
+                    <td><a href="{% url 'restaurants_menu' branch.pk %}" class="btn btn-info">Show Menu</a></td>
+                </tr>
+          </tbody>
+        </table>
     </div>
 </body>
 </html>

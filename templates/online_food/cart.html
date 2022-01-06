@@ -1,32 +1,65 @@
-{% extends './base.html' %}
-{% block content %}
-    {% comment %} <p>cart page for {{request.user}}</p> {% endcomment %}
-    {% for ord in order %}
-        {% if ord.customers_status == 'a' %}
-            {% for o in ord.menu.all %}
-                <li>{{o.item.food.name}}</li>
-                <h5>{{o.number}}</h5>
-                <h5>{{o.price}}</h5>
-                {% comment %} <h5>x:{{o.pk}}</h5> {% endcomment %}
-                <img src="/media/{{o.item.food.image}}" alt="" style="height:200px">
-                <form method="POST" id="form2" action="{% url 'cart' %}">
-                    {% csrf_token %}
-                    <button type="submit" id="{{o.pk}}">Delete</button>
-                    <a href="{% url 'delete_item' %}"></a>
-                </form>
-                <hr>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <br>
+        <br>
+        <a class="btn btn-danger" href="{% url 'home'  %}">Back</a>
+        <br>
+        <br>
+        <h2>All Order Items</h2>         
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Food's Name</th>
+              <th>Number</th>
+              <th>Price</th>
+              <th>Image</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ord in order %}
+                {% if ord.customers_status == 'a' %}
+                    {% for o in ord.menu.all %}
+                        <tr>
+                            <td>{{o.item.food.name}}</td>
+                            <td>{{o.number}}</td>
+                            <td>{{o.price}}</td>
+                            <td><img src="/media/{{o.item.food.image}}" alt="" style="height:200px"></td>
+                            <td>
+                                <form method="POST" id="form2" action="{% url 'cart' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" id="{{o.pk}}" class="btn btn-info">Remove It</button>
+                                    <a href="{% url 'delete_item' %}"></a>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <h4>total price: {{ord.total_price}}</h4>
+                {% endif %}
             {% endfor %}
-            <h3>total price: {{ord.total_price}}</h3>
-        {% endif %}
-    {% endfor %}
-
-    <form method="POST" id="form" action="{% url 'home' %}">
-        {% csrf_token %}
-        <button type="submit" id="confirm" name="confirm">CONFIRM PURCHASE</button>
-        <a href="{% url 'home' %}"></a>
-    </form> 
-{% endblock content %}
-{% block footer %}
+          </tbody>
+        </table>
+        <form method="POST" id="form" action="{% url 'home' %}">
+            {% csrf_token %}
+            <button type="submit" id="confirm" name="confirm" class="btn btn-info">CONFIRM PURCHASE</button>
+            <a href="{% url 'home' %}"></a>
+        </form>
+    </div>
+    
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     {% load static %}
     <script>
@@ -36,4 +69,5 @@
     </script>
     
     <script src={% static 'invoice.js' %}></script>
-{% endblock footer %}
+</body>
+</html>

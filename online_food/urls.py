@@ -14,6 +14,7 @@ from rest_framework import routers
 urlpatterns = [
     # path('', include(router.urls)), 
     path('', home_page, name='home'),
+    path('adminpannel/', admin_page, name='admin_page'),
     path('add/to/cart/', add_to_cart, name='add_to_cart'),
     path('all/restaurants/', AllRestaurants.as_view(), name='all_restaurants'),
     path('all/restaurants/<int:pk>', RestaurantDetail.as_view(), name='restaurants_detail'),
