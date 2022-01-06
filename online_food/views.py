@@ -48,6 +48,15 @@ def add_food(request):
     return render(request, 'online_food/add_food.html', context)
 
 
+def add_category(request):
+    if request.method == 'POST'  and request.is_ajax():
+        text = request.POST
+        print(text)
+        category = Category.objects.create(name=text['name'])
+        return JsonResponse({"text":text})
+    return render(request, 'online_food/add_category.html')
+
+
 class AllRestaurants(ListView):
     model = Branch
     template_name = 'online_food/all_restaurants.html' 
