@@ -7,36 +7,32 @@
                 <li>{{o.item.food.name}}</li>
                 <h5>{{o.number}}</h5>
                 <h5>{{o.price}}</h5>
+                {% comment %} <h5>x:{{o.pk}}</h5> {% endcomment %}
                 <img src="/media/{{o.item.food.image}}" alt="" style="height:200px">
+                <form method="POST" id="form2" action="{% url 'cart' %}">
+                    {% csrf_token %}
+                    <button type="submit" id="{{o.pk}}">Delete</button>
+                    <a href="{% url 'delete_item' %}"></a>
+                </form>
                 <hr>
             {% endfor %}
             <h3>total price: {{ord.total_price}}</h3>
         {% endif %}
     {% endfor %}
-    {% comment %} {% for ord in object_list %}
-        {% if ord.customer.user == request.user and ord.customers_status == 'a' %}
-            {% for o in ord.menu.all %}
-                <li>{{o.item.food.name}}</li>
-                <h5>{{o.number}}</h5>
-                <h5>{{o.price}}</h5>
-                <img src="/media/{{o.item.food.image}}" alt="" style="height:200px">
-                <hr>
-            {% endfor %}
-            <h3>total price: {{ord.total_price}}</h3>
-        {% endif %}
-    {% endfor %} {% endcomment %}
+
     <form method="POST" id="form" action="{% url 'home' %}">
         {% csrf_token %}
-        <button type="submit">CONFIRM PURCHASE</button>
+        <button type="submit" id="confirm" name="confirm">CONFIRM PURCHASE</button>
         <a href="{% url 'home' %}"></a>
-    </form>
+    </form> 
 {% endblock content %}
 {% block footer %}
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     {% load static %}
     <script>
         var CSRF_TOKEN = '{{ csrf_token }}';
-        var URL = "{% url 'invoice' %}"
+        var URL = "{% url 'invoice' %}";
+        var URL2 = "{% url 'delete_item' %}";
     </script>
     
     <script src={% static 'invoice.js' %}></script>

@@ -22,6 +22,9 @@ urlpatterns = [
     path('invoices/', invoice, name='invoice'),
     path('all/foods/', AllFoods.as_view(), name='all_foods'),
     path('add/food/', add_food, name='add_food'),
+    path('delete/item/', delete_item, name='delete_item'),
+    path('delete/food/', delete_food, name='delete_food'),
+    
     
     # path('popular/foods/', PopularFoods.as_view(), name='popular_foods'),
     

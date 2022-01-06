@@ -17,8 +17,21 @@
         <h6>{{food.date_of_record_jalali}}</h6>
         <img src="/media/{{food.image}}" alt="" style="height:200px">
         <br>
+        <form method="POST" id="form" action="{% url 'home' %}">
+            {% csrf_token %}
+            <button type=submit id="{{food.pk}}">Delete</button>
+            <a href="{% url 'delete_food' %}"></a>
+        </form>
         <hr>
         <br>
     {% endfor %}
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    {% load static %}
+    <script>
+        var CSRF_TOKEN = '{{ csrf_token }}';
+        var URL = "{% url 'delete_food' %}"
+    </script>
+    
+    <script src={% static 'delete_food.js' %}></script>
 </body>
 </html>

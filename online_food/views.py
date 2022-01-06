@@ -111,8 +111,10 @@ def cart(request):
 
 
 def invoice(request):
+    print("dang")
     if request.method == 'POST'  and request.is_ajax():
         flag = False
+        print(request.POST)
         for order in Order.objects.all():
             if order.customer.user == request.user:
                 for invoice in Invoice.objects.all():
@@ -143,19 +145,27 @@ class AllFoods(APIView):
         queryset = Food.objects.all()
         return Response({'object_list': queryset})
 
-    # def post(self, request):
-    #     food = get_object_or_404(Food)
-    #     serializer = FoodSerializer(food, data=request.data)
-    #     if not serializer.is_valid():
-    #         return Response({'serializer': serializer, 'object_list': food})
-    #     serializer.save()
-    #     return redirect('food-list')
 
-    # queryset = Food.objects.all()
-    # model = Food
-    # template_name = 'online_food/add_food_admin.html'
+def delete_food(request):
+    if request.method == 'POST'  and request.is_ajax():
+        text = request.POST
+        food = Food.objects.get(pk=text['food'])
+        food.delete()
+        return JsonResponse({})
+    return JsonResponse({})
 
 
+def delete_item(request):
+    # print("hhhhhhhhh")
+    if request.method == 'POST'  and request.is_ajax():
+        text = request.POST
+        print(text)
+        order_item = OrderItem.objects.get(pk=text['order_item'])
+        print(order_item, type(order_item))
+        order_item.delete()
+        return render(request, 'online_food/cart.html')
+    # print("hey")
+    return render(request, 'online_food/cart.html')
 
 # class PopularFoods(ListView):
 #     model = Invoice
