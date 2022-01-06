@@ -122,6 +122,7 @@ def invoice(request):
                         invoice.foods.add(order)
                         flag = True
                         order.customers_status = 'c'
+                        order.total_price = 0
                         order.save()
                         break;
                 if not flag:
@@ -129,6 +130,7 @@ def invoice(request):
                     new_invoice = Invoice.objects.create(customer=customer)
                     new_invoice.foods.add(order)
                     order.customers_status = 'c'
+                    order.total_price = 0
                     order.save()
                     break
         return JsonResponse({})
@@ -159,10 +161,15 @@ def delete_item(request):
     # print("hhhhhhhhh")
     if request.method == 'POST'  and request.is_ajax():
         text = request.POST
-        print(text)
+        # print(text)
         order_item = OrderItem.objects.get(pk=text['order_item'])
-        print(order_item, type(order_item))
+        # print(order_item, type(order_item))
+        order = order_item.orders.last()
+        print(order.total_price)
+        order.total_price -= order_item.price
+        print(order.total_price)
         order_item.delete()
+        order.save()
         return render(request, 'online_food/cart.html')
     # print("hey")
     return render(request, 'online_food/cart.html')
