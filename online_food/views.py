@@ -16,7 +16,9 @@ from django.db.models import Count
 
 def home_page(request):
     queryset = MenuItem.objects.filter().order_by('-order_time')[:3]
-    context = {'populars' : queryset}
+    queryset2 = Branch.objects.filter().order_by('-order_time')[:3]
+    context = {'populars' : queryset,
+    'pop_res': queryset2}
     return render(request, 'online_food/home.html' , context)
 
 
@@ -70,8 +72,9 @@ def add_to_cart(request):
         menu_item.order_time += int(number)
         menu_item.save()
         branch = menu_item.menus.last().branches
+        branch.order_time += int(number)
+        branch.save()
         price = int(number) * menu_item.price
-        # print(price)
         try:
             customer = Customer.objects.get(user=request.user)
         except:
@@ -80,7 +83,6 @@ def add_to_cart(request):
                 customer = Customer.objects.get(device=device)
             except:
                 customer = Customer.objects.create(device=device)
-            print(customer)
         flag = False 
         order_item = OrderItem.objects.create(item=menu_item, number=number, price=price)
         for obj in Order.objects.all():
@@ -90,13 +92,10 @@ def add_to_cart(request):
                 obj.menu.add(order_item)
                 obj.total_price = new_price
                 obj.save()
-                # print(obj.total_price)
             elif obj.restaurant != branch:
                 obj.delete()
                 
         if not flag:
-            print("ding")
-            print(type(customer))
             order = Order.objects.create(customer=customer, restaurant=branch, total_price=price)
             order.menu.add(order_item)
 

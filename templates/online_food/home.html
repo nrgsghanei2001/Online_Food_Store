@@ -6,7 +6,7 @@
 {% block header %}
 <div class="jumbotron">
     <div class="container text-center">
-      <h1 style="color:orange;">Online Food</h1>      
+      <h1 style="color:orange;">Online Food Store</h1>      
     </div>
   </div>
   
@@ -51,17 +51,20 @@
           </div>
         </div>
       {% endfor %}
-  </div><br><br>
+    </div>
+  <br><hr><br>
+  <div class="row">
+    {% for res in pop_res %}
+      <div class="col-sm-4">
+        <div class="panel panel-primary">
+          <div class="panel-heading"><a href={% url 'restaurants_detail' res.pk %}><span style="color: black"> Popular Restaurant {{forloop.counter}}</span></a></div>
+          <div class="panel-body"><h4 style="color: orange">{{res.restaurant}}</h4></div>
+          <div class="panel-footer"></div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
 {% endblock content %}
-{% block footer %}
-<footer class="container-fluid text-center">
-    <p>Online Food Copyright</p>  
-    <form class="form-inline">Get deals:
-      <input type="email" class="form-control" size="50" placeholder="Email Address">
-      <button type="button" class="btn btn-danger">Sign Up</button>
-    </form>
-  </footer>
-{% endblock footer %}
 
 
 

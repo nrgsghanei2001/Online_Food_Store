@@ -40,6 +40,7 @@ class Branch(models.Model):
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE, related_name='branches')
     details = models.TextField()
     date_of_register = models.DateField(auto_now_add=True)
+    order_time = models.PositiveIntegerField(editable=False, default=0)
 
     @property
     def date_of_register_jalali(self):
@@ -69,7 +70,7 @@ class MenuItem(models.Model):
     food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='menuItems')
     price = models.FloatField()
     number_of_existance = models.PositiveIntegerField()
-    order_time = models.PositiveIntegerField(null=True, blank=True, editable=False, default=0)
+    order_time = models.PositiveIntegerField(editable=False, default=0)
 
 
     def __str__(self) -> str:
