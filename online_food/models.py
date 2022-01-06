@@ -69,6 +69,7 @@ class MenuItem(models.Model):
     food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='menuItems')
     price = models.FloatField()
     number_of_existance = models.PositiveIntegerField()
+    order_time = models.PositiveIntegerField(null=True, blank=True, editable=False, default=0)
 
 
     def __str__(self) -> str:

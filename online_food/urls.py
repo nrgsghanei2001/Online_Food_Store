@@ -8,11 +8,8 @@ from django.conf.urls.static import static
 import os
 from rest_framework import routers
 
-# router = routers.DefaultRouter()
-# router.register('add/food/admin', AddFood, basename='addFood')
 
 urlpatterns = [
-    # path('', include(router.urls)), 
     path('', home_page, name='home'),
     path('adminpannel/', admin_page, name='admin_page'),
     path('add/to/cart/', add_to_cart, name='add_to_cart'),
@@ -25,9 +22,6 @@ urlpatterns = [
     path('add/food/', add_food, name='add_food'),
     path('delete/item/', delete_item, name='delete_item'),
     path('delete/food/', delete_food, name='delete_food'),
-    
-    
-    # path('popular/foods/', PopularFoods.as_view(), name='popular_foods'),
     
 ]
 

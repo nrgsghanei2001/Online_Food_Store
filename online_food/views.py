@@ -11,16 +11,19 @@ from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
+from django.db.models import Count
 
 
 def home_page(request):
-    return render(request, 'online_food/home.html')
+    queryset = MenuItem.objects.filter().order_by('-order_time')[:3]
+    context = {'populars' : queryset}
+    return render(request, 'online_food/home.html' , context)
 
 
 def admin_page(request):
     return render(request, 'online_food/admin.html')
 
-    
+
 def add_food(request):
     if request.method == 'POST'  and request.is_ajax():
         text = request.POST
@@ -64,6 +67,8 @@ def add_to_cart(request):
         menu_item=text.get('menu_item')
         menu_item = MenuItem.objects.get(id=menu_item)
         number=text.get('number')
+        menu_item.order_time += int(number)
+        menu_item.save()
         branch = menu_item.menus.last().branches
         price = int(number) * menu_item.price
         # print(price)
@@ -171,17 +176,6 @@ def delete_item(request):
         return render(request, 'online_food/cart.html')
     return render(request, 'online_food/cart.html')
 
-# class PopularFoods(ListView):
-#     model = Invoice
-#     template_name = 'online_food/popular_foods.html'
 
-#     def get_queryset(self):
-#         all_invoices = Invoice.objects.all()
-#         for invoice in all_invoices:
-#             orders = invoice.foods.all()
-#             for order in orders:
-#                 order_items = order.menu.all()
-
-#         return query_set
 
 
