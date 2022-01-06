@@ -36,7 +36,7 @@ class RestaurantAdmin(admin.ModelAdmin):
 
 @admin.register(Branch)
 class BranchAdmin(admin.ModelAdmin):
-    list_display = ['restaurant', 'menu_display']
+    list_display = ['restaurant', 'menu_display', 'date_of_register_jalali']
     list_filter = ['restaurant']
     search_fields = ['restaurant']
     
@@ -92,8 +92,8 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
-    list_display = ['customer', 'last_purchase']
-    list_filter = ['customer', 'last_purchase']
+    list_display = ['customer', 'last_purchase_jalali']
+    list_filter = ['customer']
     search_fields = ['customer']
 
 

@@ -19,7 +19,7 @@ class Address(models.Model):
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customers', null=True, blank=True)
     email = models.EmailField(blank=True, null=True)
-    address = models.ManyToManyField(Address, related_name='customers', blank=True, null=True)
+    address = models.ManyToManyField(Address, related_name='customers', blank=True)
     device = models.CharField(max_length=200, null=True, blank=True)
 
 

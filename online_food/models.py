@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.base import Model
 from accounts.models import *
+import jdatetime
 
 
 class Category(models.Model):
@@ -40,9 +41,12 @@ class Branch(models.Model):
     details = models.TextField()
     date_of_register = models.DateField(auto_now_add=True)
 
+    @property
+    def date_of_register_jalali(self):
+        return jdatetime.datetime.fromgregorian(datetime=self.date_of_register)
 
     def __str__(self) -> str:
-        return f"{self.restaurant}'\n'branch: {self.address}"
+        return f"{self.restaurant}'\n'branch: {self.address} {self.created_at_jalali}"
 
 
 class Food(models.Model):
@@ -53,6 +57,9 @@ class Food(models.Model):
     date_of_record = models.DateField(auto_now_add=True)
     image = models.ImageField(upload_to='foods/')
 
+    @property
+    def date_of_record_jalali(self):
+        return jdatetime.datetime.fromgregorian(datetime=self.date_of_record)
 
     def __str__(self):
         return self.name
@@ -104,6 +111,10 @@ class Order(models.Model):
     restaurant_status = models.CharField(max_length=1, choices=RESTAURANT_STATUS, default='r')
     total_price = models.FloatField(null=True)
 
+    @property
+    def order_time_jalali(self):
+        return jdatetime.datetime.fromgregorian(datetime=self.order_time)
+
     def __str__(self):
         return f"{self.customer} {self.get_customers_status_display()}"
 
@@ -112,6 +123,10 @@ class Invoice(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='invoices')
     foods = models.ManyToManyField(Order, related_name='invoices')
     last_purchase = models.DateTimeField(auto_now=True)
+
+    @property
+    def last_purchase_jalali(self):
+        return jdatetime.datetime.fromgregorian(datetime=self.last_purchase)
 
     def __str__(self):
         return self.customer.user.username
