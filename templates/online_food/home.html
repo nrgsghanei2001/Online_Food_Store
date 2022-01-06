@@ -33,6 +33,7 @@
             <li><a href={% url 'logout' %}><span class="glyphicon glyphicon-user"></span>Log Out</a></li>
             {% else %}
             <li><a href={% url 'login' %}><span class="glyphicon glyphicon-user"></span>Log In</a></li>
+            <li><a href="{% url 'register' %}"><span class="glyphicon glyphicon-user"></span>Sign Up</a></li>
             {% endif %}
           <li><a href={% url 'cart' %}><span class="glyphicon glyphicon-shopping-cart"></span> Cart</a></li>
         </ul>
