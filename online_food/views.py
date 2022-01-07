@@ -11,7 +11,7 @@ from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
-from django.db.models import Count
+from django.contrib import messages
 
 
 def home_page(request):
@@ -78,37 +78,42 @@ def add_to_cart(request):
         menu_item=text.get('menu_item')
         menu_item = MenuItem.objects.get(id=menu_item)
         number=text.get('number')
-        menu_item.order_time += int(number)
-        menu_item.save()
-        branch = menu_item.menus.last().branches
-        branch.order_time += int(number)
-        branch.save()
-        price = int(number) * menu_item.price
-        try:
-            customer = Customer.objects.get(user=request.user)
-        except:
-            device = request.COOKIES['device']
+        if int(number) <= menu_item.number_of_existance:
+            menu_item.order_time += int(number)
+            menu_item.number_of_existance -= int(number)
+            menu_item.save()
+            branch = menu_item.menus.last().branches
+            branch.order_time += int(number)
+            branch.save()
+            price = int(number) * menu_item.price
             try:
-                customer = Customer.objects.get(device=device)
+                customer = Customer.objects.get(user=request.user)
             except:
-                customer = Customer.objects.create(device=device)
-        flag = False 
-        order_item = OrderItem.objects.create(item=menu_item, number=number, price=price)
-        for obj in Order.objects.all():
-            if obj.customer == customer and obj.customers_status == 'a' and obj.restaurant == branch:
-                flag = True
-                new_price = obj.total_price + price
-                obj.menu.add(order_item)
-                obj.total_price = new_price
-                obj.save()
-            elif obj.restaurant != branch:
-                obj.delete()
-                
-        if not flag:
-            order = Order.objects.create(customer=customer, restaurant=branch, total_price=price)
-            order.menu.add(order_item)
+                device = request.COOKIES['device']
+                try:
+                    customer = Customer.objects.get(device=device)
+                except:
+                    customer = Customer.objects.create(device=device)
+            flag = False 
+            order_item = OrderItem.objects.create(item=menu_item, number=number, price=price)
+            for obj in Order.objects.all():
+                if obj.customer == customer and obj.customers_status == 'a' and obj.restaurant == branch:
+                    flag = True
+                    new_price = obj.total_price + price
+                    obj.menu.add(order_item)
+                    obj.total_price = new_price
+                    obj.save()
+                elif obj.restaurant != branch:
+                    obj.delete()
+                    
+            if not flag:
+                order = Order.objects.create(customer=customer, restaurant=branch, total_price=price)
+                order.menu.add(order_item)
 
-        return JsonResponse({})
+            return JsonResponse({})
+        else:
+            context = {'error':"There is not exist this much of the food you chose!"}
+            return render(request, 'online_food/restaurants_menu.html', context)
 
     return JsonResponse({})
 
