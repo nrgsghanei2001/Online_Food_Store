@@ -30,7 +30,7 @@
               <th>Date Of Record</th>
               <th>Details</th>
               <th>Image</th>
-              <th>Delete</th>
+              <th>Delete/Edit</th>
             </tr>
           </thead>
           <tbody>
@@ -49,8 +49,13 @@
                     <td>
                         <form method="POST" id="form" action="{% url 'admin_page' %}">
                             {% csrf_token %}
-                            <button type=submit id="{{food.pk}}" class="btn btn-info">Remove It</button>
+                            <button type=submit id="{{food.pk}}" class="btn btn-info" name="remove">Remove It</button>
                             <a href="{% url 'delete_food' %}"></a>
+                        </form>
+                        <form method="POST" id="form" action="{% url 'edit_food' %}">
+                            {% csrf_token %}
+                            <button type=submit id="{{food.pk}}" class="btn btn-info" name="edit">Edit It</button>
+                            <a href="{% url 'edit_food' %}"></a>
                         </form>
                     </td>
                 </tr>
@@ -63,6 +68,7 @@
     <script>
         var CSRF_TOKEN = '{{ csrf_token }}';
         var URL = "{% url 'delete_food' %}"
+        var URL2 = "{% url 'edit_food' %}"
     </script>
     <script src={% static 'delete_food.js' %}></script>
 </body>
