@@ -1,15 +1,12 @@
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
 from django.views import generic
-# from .forms import CustomUserCreationForm
 from django.contrib import messages
 from .forms import RegisterForm
 from online_food.urls import *
 
 
 def SignupPageView(req):
-    # form_class = CustomUserCreationForm
-    # success_url = reverse_lazy('login')
     return render(req, 'registration/signup.html')
 
 def register(request):
@@ -31,3 +28,18 @@ def register(request):
             return render(request, 'register.html', context)
 
     return render(request, 'register.html', {})
+
+
+def profile(request):
+    customer = Customer.objects.get(user=request.user)
+    context = {'customer':customer}
+    return render(request, 'accounts/profile.html', context)
+
+
+def edit_info(request):
+    return JsonResponse({})
+
+
+
+
+

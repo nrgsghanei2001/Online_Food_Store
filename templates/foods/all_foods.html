@@ -52,6 +52,7 @@
                             <button type=submit id="{{food.pk}}" class="btn btn-info" name="remove">Remove It</button>
                             <a href="{% url 'delete_food' %}"></a>
                         </form>
+                        <br>
                         <form method="POST" id="form" action="{% url 'edit_food' %}">
                             {% csrf_token %}
                             <button type=submit id="{{food.pk}}" class="btn btn-info" name="edit">Edit It</button>

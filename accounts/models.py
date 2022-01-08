@@ -7,10 +7,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser 
 
 
-# class CustomUser(AbstractUser): 
-#     email = models.EmailField(unique=True)
-
-
 class Address(models.Model):
     city = models.CharField(max_length=50)
     address = models.TextField()
@@ -22,7 +18,6 @@ class Address(models.Model):
 
 
 class Customer(models.Model):
-    # username = models.(max_length=50, null=True, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customers', null=True, blank=True)
     email = models.EmailField(blank=True, null=True)
     address = models.ManyToManyField(Address, related_name='customers', blank=True)
