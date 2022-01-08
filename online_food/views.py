@@ -6,7 +6,8 @@ from rest_framework import generics, viewsets, permissions, response, status
 from rest_framework.views import APIView
 from accounts.models import Customer
 from .serializers import *
-from online_food.models import Branch, Food, Invoice, MenuItem, Order, OrderItem, Restaurant
+from online_food.models import *
+from foods.models import *
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -24,37 +25,6 @@ def home_page(request):
 
 def admin_page(request):
     return render(request, 'online_food/admin.html')
-
-
-def add_food(request):
-    if request.method == 'POST'  and request.is_ajax():
-        text = request.POST
-        name = text['name']
-        detail = text['detail']
-        category = text['category']
-        category = Category.objects.get(name=category)
-        meal = text['meal']
-        meal = Meal.objects.get(meal=meal)
-        image = text['image']
-        food = Food.objects.create(name=name, detail=detail, meal=meal, image=image)
-        food.category.add(category)
-        food.save()
-        return JsonResponse({"text":text})
-    
-    categories = Category.objects.all()
-    meals = Meal.objects.all()
-    context = {'categories' : categories, 
-    'meals' : meals}
-    return render(request, 'online_food/add_food.html', context)
-
-
-def add_category(request):
-    if request.method == 'POST'  and request.is_ajax():
-        text = request.POST
-        print(text)
-        category = Category.objects.create(name=text['name'])
-        return JsonResponse({"text":text})
-    return render(request, 'online_food/add_category.html')
 
 
 class AllRestaurants(ListView):
@@ -127,10 +97,6 @@ def cart(request):
     context = {'order': order}
     return render(request, 'online_food/cart.html', context)
 
-# class Cart(ListView):
-#     model = Order
-#     template_name = 'online_food/cart.html'
-
 
 def invoice(request):
     print("dang")
@@ -157,24 +123,6 @@ def invoice(request):
                     break
         return JsonResponse({})
 
-    return JsonResponse({})
-
-
-class AllFoods(APIView):
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'online_food/all_foods.html'
-
-    def get(self, request):
-        queryset = Food.objects.all()
-        return Response({'object_list': queryset})
-
-
-def delete_food(request):
-    if request.method == 'POST'  and request.is_ajax():
-        text = request.POST
-        food = Food.objects.get(pk=text['food'])
-        food.delete()
-        return JsonResponse({})
     return JsonResponse({})
 
 

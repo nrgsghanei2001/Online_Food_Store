@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'online_food',
     'accounts',
+    'foods',
     'rest_framework',
 ]
 

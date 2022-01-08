@@ -3,27 +3,8 @@ from django.db.models.fields import CharField
 from .models import *
 
 
-class FoodInline(admin.TabularInline):
-    model = Food
-
-
 class BranchInline(admin.TabularInline):
     model = Branch
-
-
-@admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name']
-    list_filter = ['name']
-    search_fields = ['name']
-
-
-@admin.register(Meal)
-class MealAdmin(admin.ModelAdmin):
-    list_display = ['meal']
-    list_filter = ['meal']
-    search_fields = ['meal']
-    inlines = [FoodInline]
 
 
 @admin.register(Restaurant)
@@ -53,18 +34,6 @@ class MenuItemAdmin(admin.ModelAdmin):
     search_fields = ['food', 'price', 'number_of_existance']
 
 
-
-@admin.register(Food)
-class FoodAdmin(admin.ModelAdmin):
-    list_display = ['name', 'detail', 'category_list', 'meal']
-    list_filter = ['name', 'meal']
-    search_fields = ['name', 'meal']
-    
-    @admin.display(description='categories')
-    def category_list(self, obj):
-        return " , ".join(ad.name for ad in obj.category.all())
-
-
 @admin.register(Menu)
 class MenuAdmin(admin.ModelAdmin):
     list_display = ['items', 'restaurant']
@@ -84,10 +53,6 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['customer', 'restaurant', 'customers_status', 'restaurant_status']
     list_filter = ['customer', 'restaurant', 'customers_status', 'restaurant_status']
     search_fields = ['customer', 'restaurant', 'customers_status', 'restaurant_status']
-    
-    # @admin.display(description='menu')
-    # def menu_list(self, obj):
-    #     return " , ".join(ad.food.name for ad in obj.menu.all())
 
 
 @admin.register(Invoice)
