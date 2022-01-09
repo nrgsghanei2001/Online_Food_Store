@@ -1,11 +1,5 @@
 $( document ).ready(function() {
-    // $("button").click(function(e) {
-    //     send_ajax()
-    // });
     $("button").click(function(e) {
-        // e.preventDefault()
-        // console.log("hi")
-        // alert("hi")
         order_item_id = e.target.id;
         if (order_item_id == "confirm") {
             send_ajax()
@@ -19,6 +13,7 @@ $( document ).ready(function() {
         
         data={
             'csrfmiddlewaretoken':CSRF_TOKEN,
+            'address':$("#address :selected").val(),
             };
         console.log(data);
 

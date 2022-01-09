@@ -100,14 +100,17 @@ def cart(request):
 
 
 def invoice(request):
-    print("dang")
     if request.method == 'POST'  and request.is_ajax():
         flag = False
-        print(request.POST)
+        text = request.POST
+        address_id = text['address']
+        address = Address.objects.get(id=address_id)
         for order in Order.objects.all():
             if order.customer.user == request.user:
                 for invoice in Invoice.objects.all():
                     if invoice.customer.user == request.user:
+                        order.address = address
+                        order.save()
                         invoice.foods.add(order)
                         flag = True
                         order.customers_status = 'c'
@@ -117,6 +120,8 @@ def invoice(request):
                 if not flag:
                     customer = Customer.objects.get(user=request.user)
                     new_invoice = Invoice.objects.create(customer=customer)
+                    order.address = address
+                    order.save()
                     new_invoice.foods.add(order)
                     order.customers_status = 'c'
                     order.total_price = 0
