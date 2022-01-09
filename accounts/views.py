@@ -59,6 +59,15 @@ def edit_info(request):
     return render(request, 'accounts/edit_info.html' , context)
 
 
+def remove_address(request):
+    if request.method == 'POST'  and request.is_ajax():
+        text = request.POST
+        address1 = text['address_id']
+        address = Address.objects.get(id=address1)
+        address.delete()
+        print(address)
+        return JsonResponse({})
 
+    return JsonResponse({})
 
 

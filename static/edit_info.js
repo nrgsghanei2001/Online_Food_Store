@@ -1,6 +1,12 @@
 $( document ).ready(function() {
-    $("#edit").click(function() {
-        send_ajax()
+    $("button").click(function(e) {
+        address_id = e.target.id
+        if (address_id == "edit") {
+            send_ajax()
+        }
+        else {
+            send_ajax1()
+        }
     });
 
     function send_ajax(){
@@ -16,6 +22,28 @@ $( document ).ready(function() {
         $.ajax({
             type: 'POST',
             url: URL,
+            dataType: 'json',
+            data:data,
+            
+            success: function(res) {
+                console.log(res);
+            },
+            always: function() {
+                console.log(data);
+            }
+        });
+    }
+    function send_ajax1(){
+        data={
+            'csrfmiddlewaretoken':CSRF_TOKEN,
+            'address_id': address_id,
+            };
+        console.log(data);
+        console.log("data");
+
+        $.ajax({
+            type: 'POST',
+            url: URL2,
             dataType: 'json',
             data:data,
             
