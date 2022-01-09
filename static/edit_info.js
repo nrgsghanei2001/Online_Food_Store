@@ -1,12 +1,14 @@
 $( document ).ready(function() {
-    $("#edit_info").click("input", function() {
-        console.log("xxxxxxxxxxx")
+    $("#edit").click(function() {
         send_ajax()
     });
 
     function send_ajax(){
         data={
             'csrfmiddlewaretoken':CSRF_TOKEN,
+            'email' : $("#email").val(),
+            'city': $("#city").val(),
+            'address': $("#address").val(),
             };
         console.log(data);
         console.log("data");

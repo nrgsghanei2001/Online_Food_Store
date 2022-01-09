@@ -37,7 +37,26 @@ def profile(request):
 
 
 def edit_info(request):
-    return JsonResponse({})
+    if request.method == 'POST'  and request.is_ajax():
+        text = request.POST
+        email = text['email']
+        city = text['city']
+        address1 = text['address']
+        address = ""
+        if city != "":
+            address = Address.objects.create(city=city, address=address1)
+        customer = Customer.objects.get(user=request.user)
+        if email != "":
+            customer.email = email
+        if address != "":
+            customer.address.add(address)
+        customer.save()
+        print(text)
+        return JsonResponse({})
+
+    customer = Customer.objects.get(user=request.user)
+    context = {'customer':customer}
+    return render(request, 'accounts/edit_info.html' , context)
 
 
 

@@ -10,11 +10,11 @@ from django.contrib.auth.models import AbstractUser
 class Address(models.Model):
     city = models.CharField(max_length=50)
     address = models.TextField()
-    phone = PhoneNumberField(null=False, blank=False, unique=True)
+    phone = PhoneNumberField(null=True, blank=True, unique=True)
 
 
     def __str__(self):
-        return f"{self.city}, {self.address}'\n'phone number: {self.phone}"
+        return f"{self.city}, {self.address}"
 
 
 class Customer(models.Model):
