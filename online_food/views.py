@@ -138,5 +138,16 @@ def delete_item(request):
     return render(request, 'online_food/cart.html')
 
 
-
+def all_orders(request):
+    customer = Customer.objects.get(user=request.user)
+    confirmed_orders = Order.objects.filter(customers_status='c', customer=customer)
+    is_sending_orders = Order.objects.filter(customers_status='s', customer=customer)
+    delivered_orders = Order.objects.filter(customers_status='d', customer=customer)
+    # print(confirmed_orders)
+    context = {
+        'confirmed_orders':confirmed_orders,
+        'is_sending_orders':is_sending_orders,
+        'delivered_orders':delivered_orders,
+    }
+    return render(request, 'online_food/all_orders.html', context)
 

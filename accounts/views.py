@@ -4,6 +4,8 @@ from django.views import generic
 from django.contrib import messages
 from .forms import RegisterForm
 from online_food.urls import *
+from .models import *
+from django.contrib.auth.models import User
 
 
 def SignupPageView(req):
@@ -19,6 +21,8 @@ def register(request):
         if form.is_valid():
             form.save()
             user = form.cleaned_data.get('username')
+            user2 = User.objects.get(username=user)
+            customer = Customer.objects.create(user=user2)
             messages.success(request, 'Account was created for ' + user)
             return redirect('home')
         else:

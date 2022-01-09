@@ -34,6 +34,7 @@
         <ul class="nav navbar-nav navbar-right">
             {% if user.is_authenticated %}
             <li><a href={% url 'logout' %}><span class="glyphicon glyphicon-user"></span>Log Out</a></li>
+            <li><a href={% url 'all_orders' %}><span class="glyphicon glyphicon-shopping-cart"></span>Processing Orders</a></li>
             {% else %}
             <li><a href={% url 'login' %}><span class="glyphicon glyphicon-user"></span>Log In</a></li>
             <li><a href="{% url 'register' %}"><span class="glyphicon glyphicon-user"></span>Sign Up</a></li>

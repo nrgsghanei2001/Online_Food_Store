@@ -19,6 +19,7 @@ urlpatterns = [
     path('cart/', cart, name='cart'),
     path('invoices/', invoice, name='invoice'),
     path('delete/item/', delete_item, name='delete_item'),
+    path('all/orders/', all_orders, name='all_orders'),
 ]
 
 if settings.DEBUG:
