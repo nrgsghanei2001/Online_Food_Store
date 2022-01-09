@@ -45,7 +45,7 @@
                     <td>{{food.meal}}</td>
                     <td>{{food.date_of_record_jalali}}</td>
                     <td>{{food.detail}}</td>
-                    <td><img src="/media/{{food.image}}" alt="" style="height:200px"></td>
+                    <td><img src="/media/{{food.image}}" alt="" style="height:200px;width:250px;border-radius: 8px;"></td>
                     <td>
                         <form method="POST" id="form" action="{% url 'admin_page' %}">
                             {% csrf_token %}

@@ -52,7 +52,7 @@
         <div class="col-sm-4">
           <div class="panel panel-primary">
             <div class="panel-heading"><a href={% url 'restaurants_menu' food.menus.last.branches.pk %}><span style="color: black"> Popular Food {{forloop.counter}}</span></a></div>
-            <div class="panel-body"><img src="/media/{{food.food.image}}" class="img-responsive" style="width:100%" alt="Image"></div>
+            <div class="panel-body"><img src="/media/{{food.food.image}}" class="img-responsive" style="height:200px;width:250px;border-radius: 8px;" alt="Image"></div>
             <div class="panel-footer"></div>
           </div>
         </div>

@@ -45,7 +45,7 @@
                     <td>{{f.food.meal}}</td>
                     <td>{{f.price}}</td>
                     <td>{{f.food.detail}}</td>
-                    <td><img src="/media/{{f.food.image}}" alt="" style="height:200px"></td>
+                    <td><img src="/media/{{f.food.image}}" alt="" style="height:200px;width:250px;border-radius: 8px;"></td>
                     <td>
                         <form method="POST" id="form" action="{% url 'add_to_cart' %}">
                         {% csrf_token %}

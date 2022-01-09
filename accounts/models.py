@@ -1,10 +1,6 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import User
-from django.contrib.auth.base_user import BaseUserManager
-from django.utils.translation import ugettext_lazy as _
-# from online_food.models import Branch
-from django.contrib.auth.models import AbstractUser 
 
 
 class Address(models.Model):
@@ -31,12 +27,3 @@ class Customer(models.Model):
         else:
             return self.device
    
-
-class Staff(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='staffs')
-    email = models.EmailField(blank=True)
-    address = models.ManyToManyField(Address, related_name='staffs')
-    # restaurant = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='staffs')
-
-    def __str__(self):
-        return self.user.username
