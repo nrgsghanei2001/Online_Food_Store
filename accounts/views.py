@@ -22,6 +22,7 @@ def register(request):
             form.save()
             user = form.cleaned_data.get('username')
             user2 = User.objects.get(username=user)
+            # device = request.COOKIES['device']
             customer = Customer.objects.create(user=user2)
             messages.success(request, 'Account was created for ' + user)
             return redirect('home')

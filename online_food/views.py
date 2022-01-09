@@ -94,7 +94,8 @@ def cart(request):
         device = request.COOKIES['device']
         customer = Customer.objects.get(device=device)
     order = Order.objects.filter(customer=customer)
-    context = {'order': order}
+    context = {'order': order,
+    'customer':customer,}
     return render(request, 'online_food/cart.html', context)
 
 
@@ -143,7 +144,6 @@ def all_orders(request):
     confirmed_orders = Order.objects.filter(customers_status='c', customer=customer)
     is_sending_orders = Order.objects.filter(customers_status='s', customer=customer)
     delivered_orders = Order.objects.filter(customers_status='d', customer=customer)
-    # print(confirmed_orders)
     context = {
         'confirmed_orders':confirmed_orders,
         'is_sending_orders':is_sending_orders,

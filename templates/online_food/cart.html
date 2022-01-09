@@ -16,7 +16,7 @@
     <div class="container">
         <br>
         <br>
-        <a class="btn btn-danger" href="{% url 'home' %}">Home</a>
+        <a class="btn btn-outline-dark" href="{% url 'home' %}">Home</a>
         <br>
         <br>
         <h2>All Order Items</h2>         
@@ -42,7 +42,7 @@
                             <td>
                                 <form method="POST" id="form2" action="{% url 'cart' %}">
                                     {% csrf_token %}
-                                    <button type="submit" id="{{o.pk}}" class="btn btn-info">Remove It</button>
+                                    <button type="submit" id="{{o.pk}}" class="btn btn-warning">Remove It</button>
                                     <a href="{% url 'delete_item' %}"></a>
                                 </form>
                             </td>
@@ -53,11 +53,32 @@
             {% endfor %}
           </tbody>
         </table>
+        {% if user.is_authenticated %}
         <form method="POST" id="form" action="{% url 'home' %}">
             {% csrf_token %}
-            <button type="submit" id="confirm" name="confirm" class="btn btn-info">CONFIRM PURCHASE</button>
+            <div class="form-group col-md-4">
+                <label for="meal"><b>Choose the address</b></label>
+                <a class="btn btn-primary" href="{% url 'edit_info' %}">add a new address</a>
+                <br>
+                <br>
+                <select name="address" id="address" class="form-control" required>
+                  {% for obj in customer.address.all %}
+                    <option value={{obj.pk}}>{{obj}}</option>
+                  {% endfor %}
+                </select>
+            </div>
+            <button type="submit" id="confirm" name="confirm" class="btn btn-success">CONFIRM PURCHASE</button>
             <a href="{% url 'home' %}"></a>
         </form>
+        {% else %}
+            <h3>Please Log In to Confirm Your Purchase</h3>
+            <br>
+            <h5>Already have an account?</h5>
+            <a class="btn btn-danger" href="{% url 'login' %}">Log In</a>
+            <br>
+            <h5>Don't have an account?</h5>
+            <a class="btn btn-danger" href="{% url 'register' %}">Register</a>
+        {% endif %}
     </div>
     
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
