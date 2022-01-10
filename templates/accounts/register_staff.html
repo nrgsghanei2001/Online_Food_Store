@@ -1,82 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 <body>
-  <div class="container">
-  <br>
-  <br>
-  <a class="btn btn-danger" href="{% url 'home' %}">Back</a>
-  <br>
-  <br>
-  <form method="POST" id="form" action="{% url 'register_staff' %}">
-    {% csrf_token %}
-    <div class="container">
-    <h2>Create your own restaurant here...</h2>
-    <br>
-    <br>
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <label for="restaurant"><b>restaurant</b></label><br>
-        <input type="text" id="restaurant" class="form-control" name="restaurant">
-      </div>
-    </div>
-    <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="restaurant"><b>restaurant</b></label><br>
-          <input type="text" id="restaurant" class="form-control" name="restaurant">
+    <form class="login-form" method="POST">
+        {% csrf_token %}
+        <div class="row">
+        <div class="col-md-12">
+        {% if form.errors %}
+        {% for field in form %}
+        {% for error in field.errors %}
+        <div class="alert alert-danger">
+        <strong>{{ error|escape }}</strong>
+        <strong>{{ field|escape }}</strong>
         </div>
-    </div>
-    <hr>
-    <h3>Your Addresses are:</h3>
-    <div class="form-row">
-        <table class="table table-bordered">
-            <tbody>
-                {% for add in customer.address.all %}
-                    <tr>
-                        <td><b>{{add}}</b></td>
-                        <td><button type="submit" id="{{add.pk}}" class="btn btn-danger">remove</button></td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <hr>
-    <h4>Add an address</h4>
-    <br>
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <label for="city"><b>city</b></label><br>
-            <input type="text" id="city" class="form-control" name="city">
+        {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+        <strong>{{ error|escape }}</strong>
         </div>
-        <div class="form-group col-md-6">
-            <label for="address"><b>Address</b></label><br>
-            <textarea id="address" class="form-control" name="address" placeholder="Enter the address here..." style="height:100px"></textarea>
+        {% endfor %}
+        {% endif %}
         </div>
-    </div>
-    <button type="submit" class="btn btn-primary" id="edit">CONFIRM EDIT</button>
-    <br>
-    {% comment %} <a href="{% url 'edit_info' %}"></a> {% endcomment %}
-  </form>
-  <br>
-</div>
-    {% load static %}
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script>
-        var CSRF_TOKEN = '{{ csrf_token }}';
-        var URL = "{% url 'edit_info' %}"
-        var URL2 = "{% url 'remove_address' %}"
-    </script>
-    <script src={% static 'edit_info.js' %}></script>
+        <div class="col-md-6">
+        <div class="form-group position-relative">
+        </div>
+        <div class="col-md-12">
+        <div class="form-group position-relative">
+        <label>Your Email <span class="text-danger">*</span></label>
+        {{form.email}}
+        </div>
+        {% if form.email.errors %}
+        {% for error in form.email.errors %}
+        <div class="alert alert-danger">
+        <strong>{{ error|escape }}</strong>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <br>
+        <br>
+        </div>
+        <div class="col-md-12">
+        <div class="form-group position-relative">
+        <label>Username <span class="text-danger">*</span></label>
+        {{form.username}}
+        </div>
+        {% if form.username.errors %}
+        {% for error in form.username.errors %}
+        <div class="alert alert-danger">
+        <strong>{{ error|escape }}</strong>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <br>
+        <br>
+        </div>
+        <div class="col-md-12">
+        <div class="form-group position-relative">
+        <label>Password <span class="text-danger">*</span></label>
+        {{form.password1}}
+        </div>
+        {% if form.password1.errors %}
+        {% for error in form.password1.errors %}
+        <div class="alert alert-danger">
+        <strong>{{ error|escape }}</strong>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <br>
+        </div>
+        <div class="col-md-12">
+        <div class="form-group position-relative">
+        <label>Confirm Password <span class="text-danger">*</span></label>
+        {{form.password2}}
+        </div>
+        {% if form.password2.errors %}
+        {% for error in form.password2.errors %}
+        <div class="alert alert-danger">
+        <strong>{{ error|escape }}</strong>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <br>
+        <br>
+        </div>
+         <div class="col-md-12">
+        <div class="form-group">
+        <div class="custom-control">
+        {{form.check}}
+        <label >I Accept <a href="#" class="text-primary">Terms And Condition</a></label>
+        </div>
+        {% if form.check.errors %}
+        {% for error in form.check.errors %}
+        <div class="alert alert-danger">
+        <strong>{{ error|escape }}</strong>
+        </div>
+        {% endfor %}
+        {% endif %}
+        </div>
+        </div>
+        <div class="col-md-12">
+        <button class="btn btn-primary w-100" type="submit" >Register</button>
+        </div>
+        <div class="mx-auto">
+        <p class="mb-0 mt-3"><small class="text-dark mr-2">Already have an account ?</small> <a href="{% url 'login' %}" class="text-dark font-weight-bold">Sign in</a></p>
+        </div>
+        </div>
+        </form>
 </body>
 </html>

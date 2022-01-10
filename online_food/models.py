@@ -16,7 +16,7 @@ class Restaurant(models.Model):
 class Branch(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='branches')
     address = models.OneToOneField(Address, on_delete=models.CASCADE, related_name="branch")
-    menu = models.OneToOneField('Menu', on_delete=models.CASCADE, related_name='branches')
+    menu = models.OneToOneField('Menu', on_delete=models.CASCADE, related_name='branches', null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='branches')
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE, related_name='branches')
     details = models.TextField()

@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-    $("#submit").click("input", function() {
+    $("#add").click("input", function() {
         console.log("xxxxxxxxxxx")
         send_ajax()
     });
@@ -7,11 +7,12 @@ $( document ).ready(function() {
     function send_ajax(){
         data={
             'csrfmiddlewaretoken':CSRF_TOKEN,
-            'name' : $("#name").val(),
-            'detail': $("#detail").val(),
-            'category' :$("#category :selected").text(),
-            'meal': $("#meal :selected").text(),
-            'image': $("#image").val(),
+            'restaurant' : $("#restaurant :selected").val(),
+            'city': $("#city").val(),
+            'address' :$("#address").val(),
+            'category': $("#category").val(),
+            'meal': $("#meal :selected").val(),
+            'details': $("#details").val(),
             };
         console.log(data);
         alert("add")

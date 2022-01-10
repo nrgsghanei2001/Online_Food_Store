@@ -2,6 +2,8 @@ from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
 from django.views import generic
 from django.contrib import messages
+
+from restaurant.models import Staff
 from .forms import RegisterForm
 from online_food.urls import *
 from .models import *
@@ -36,8 +38,15 @@ def register(request):
 
 
 def profile(request):
-    customer = Customer.objects.get(user=request.user)
-    context = {'customer':customer}
+    try:
+        customer = Customer.objects.get(user=request.user)
+        staff = 'no'
+    except:
+        customer = Staff.objects.get(user=request.user)
+        print(customer.restaurant)
+        staff = 'yes'
+    context = {'customer':customer,
+    'staff':staff,}
     return render(request, 'accounts/profile.html', context)
 
 

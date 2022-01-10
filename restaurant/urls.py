@@ -8,7 +8,8 @@ import os
 
 
 urlpatterns = [
-    # path('register/staff/', register, name='register_staff'),
+    path('register/staff/', register, name='register_staff'),
+    path('add/branch/', add_branch, name='add_branch'),
 ]
 
 if settings.DEBUG:
