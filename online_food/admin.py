@@ -17,13 +17,10 @@ class RestaurantAdmin(admin.ModelAdmin):
 
 @admin.register(Branch)
 class BranchAdmin(admin.ModelAdmin):
-    list_display = ['restaurant', 'menu_display', 'date_of_register_jalali']
+    list_display = ['restaurant', 'date_of_register_jalali']
     list_filter = ['restaurant']
     search_fields = ['restaurant']
     
-    @admin.display(description='menu')
-    def menu_display(self, obj):
-        return " , ".join(ad.food.name for ad in obj.menu.item.all())
 
 
 @admin.register(MenuItem)

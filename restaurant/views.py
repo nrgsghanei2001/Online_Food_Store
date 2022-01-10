@@ -53,3 +53,11 @@ def add_branch(request):
     context = {'meals':meals,
     'restaurants':restaurants,}
     return render(request, 'accounts/add_branch.html', context)
+
+
+def show_menu(request):
+    staff = Staff.objects.get(user=request.user)
+    menu = staff.restaurant.menu.item.all()
+    context = {'menu':menu}
+    return render(request, 'restaurant/show_menu.html', context)
+

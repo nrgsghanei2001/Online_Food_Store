@@ -28,7 +28,7 @@ class Branch(models.Model):
         return jdatetime.datetime.fromgregorian(datetime=self.date_of_register)
 
     def __str__(self) -> str:
-        return f"{self.restaurant}'\n'branch: {self.address} {self.date_of_register_jalali}"
+        return f"{self.restaurant} branch: {self.address} {self.date_of_register_jalali}"
 
 
 class MenuItem(models.Model):

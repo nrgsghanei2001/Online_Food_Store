@@ -46,13 +46,41 @@
             {% else %}
             <div class="mt-5 text-center">
                 <h4 class="mb-0">{{customer.user.username}}</h4>
-                <div class="d-flex justify-content-between align-items-center mt-4 px-4">
-                    <div class="stats">
+                <div class="mt-5 text-center">
+                    <div class="stats text-center">
                         <h6 class="mb-0">Email</h6> <span>{{customer.email}}</span>
                     </div>
+                </div>
+                <div class="mt-5 text-center">
                     <div class="stats">
                         {% if customer.restaurant %}
-                        <h6 class="mb-0">Restaurant Branch</h6> <span>{{customer.restaurant}}</span>
+                        <div class="container">
+                            <br>     
+                            <table class="table table-bordered">
+                              <thead>
+                                <tr>
+                                  <th>Restaurant</th>
+                                  <th>Address</th>
+                                  <th>Category</th>
+                                  <th>Meal</th>
+                                  <th>Details</th>
+                                  <th>Registered Date</th>
+                                  <th>Menu</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                    <td>{{customer.restaurant.restaurant}}</td>
+                                    <td>{{customer.restaurant.address}}</td>
+                                    <td>{{customer.restaurant.category}}</td>
+                                    <td>{{customer.restaurant.meal}}</td>
+                                    <td>{{customer.restaurant.details}}</td>
+                                    <td>{{customer.restaurant.date_of_register_jalali}}</td>
+                                    <td><a class="btn btn-success btn-sm follow" href="{% url 'show_menu' %}">Menu</a></td>
+                                </tr>
+                              </tbody>
+                            </table>
+                        </div>
                         {% else %}
                             <a class="btn btn-primary btn-sm follow" href="{% url 'add_branch' %}">Add Your Restaurant</a>  
                         {% endif %}

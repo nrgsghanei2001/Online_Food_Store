@@ -10,6 +10,7 @@ import os
 urlpatterns = [
     path('register/staff/', register, name='register_staff'),
     path('add/branch/', add_branch, name='add_branch'),
+    path('show/menu/', show_menu, name='show_menu'),
 ]
 
 if settings.DEBUG:
