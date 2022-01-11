@@ -117,3 +117,11 @@ def add_to_menu(request):
     foods = Food.objects.all()
     context = {'foods':foods,}
     return render(request, 'restaurant/add_to_menu.html', context)
+
+
+def show_restaurants_orders(request):
+    staff = Staff.objects.get(user=request.user)
+    branch = staff.restaurant
+    orders = Order.objects.filter(restaurant=branch)
+    context = {'orders':orders,}
+    return render(request, 'restaurant/show_orders.html', context)

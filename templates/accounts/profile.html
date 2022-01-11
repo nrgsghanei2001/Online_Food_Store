@@ -20,6 +20,11 @@
         <a class="btn btn-primary btn-sm follow" href="{% url 'home' %}">Home</a>
         <br>
         <br>
+        {% if staff == "yes" %}
+        <a class="btn btn-primary" href="{% url 'show_restaurants_orders' %}">Orders</a>
+        <br>
+        <br>
+        {% endif %}
         <div class="card">
             {% if staff == "no" %}
             <div class="mt-5 text-center">
@@ -88,7 +93,6 @@
                 </div>
                 <br>
                 <br>
-                {% comment %} <a class="btn btn-primary btn-sm follow" href="{% url 'edit_info' %}">Edit</a> {% endcomment %}
                 <br>
                 <br>
             </div>
