@@ -55,9 +55,65 @@ def add_branch(request):
     return render(request, 'accounts/add_branch.html', context)
 
 
+# def edit(request, pk):
+#     # if num != 0:
+#     #     print("dang")
+#     #     print(request)
+#     #     return render(request, 'online_food/base.html')
+#         # return render(request, 'restaurant/edit_menu.html')
+
+#     if request.method == 'POST'  and request.is_ajax():
+#         text = request.POST
+#         name = text['name']
+#         price = text['price']
+#         food = MenuItem.objects.get(id=pk)
+#         if food.price != "":
+#             food.price = price
+#         food.save()
+#         return JsonResponse({})
+
+#     return render(request, 'restaurant/edit_menu.html')
+
+
 def show_menu(request):
+    if request.method == 'POST'  and request.is_ajax():
+        text = request.POST
+        action = text['action']
+        if action == 'delete':
+            menu_item = MenuItem.objects.get(id=text['item_id'])
+            menu_item.delete()
+        # else:
+        #     print('ding')
+        #     return render(request, 'restaurant/edit_menu.html')
+            # edit(request, 1)
+            # return JsonResponse({})
+
+        return JsonResponse({})
+
     staff = Staff.objects.get(user=request.user)
-    menu = staff.restaurant.menu.item.all()
+    try:
+        menu = staff.restaurant.menu.item.all()
+    except:
+        menu = []
     context = {'menu':menu}
     return render(request, 'restaurant/show_menu.html', context)
 
+
+def add_to_menu(request):
+    if request.method == 'POST'  and request.is_ajax():
+        text = request.POST
+        food_id = text['food']
+        food = Food.objects.get(id=food_id)
+        price = float(text['price'])
+        numner = int(text['number'])
+        menu_item = MenuItem.objects.create(food=food, price=price, number_of_existance=numner)
+        staff = Staff.objects.get(user=request.user)
+        menu = staff.restaurant.menu.item.add(menu_item)
+        staff.restaurant.menu.save()
+
+
+        return JsonResponse({})
+
+    foods = Food.objects.all()
+    context = {'foods':foods,}
+    return render(request, 'restaurant/add_to_menu.html', context)

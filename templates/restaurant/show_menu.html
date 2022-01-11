@@ -10,7 +10,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="container">
@@ -18,6 +17,7 @@
         <br>
         <a class="btn btn-danger" href="{% url 'home' %}">Home</a>
         <a class="btn btn-danger" href="{% url 'profile' %}">Back</a>
+        <a class="btn btn-danger" href="{% url 'add_to_menu' %}">Add menu item</a>
         <br>
         <br>
         <h2>Restaurant's Menu</h2>         
@@ -30,6 +30,7 @@
               <th>Price</th>
               <th>Details</th>
               <th>Image</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -45,19 +46,27 @@
                     <td>{{f.price}}</td>
                     <td>{{f.food.detail}}</td>
                     <td><img src="/media/{{f.food.image}}" alt="" style="height:200px;width:250px;border-radius: 8px;"></td>
+                    <td>
+                        <br>
+                        <button class="btn btn-warning" id="{{f.pk}}" name="delete">Delete</button>
+                        <br>
+                        <br>
+                        <a class="btn btn-info" href="#">Edit</a>
+                        {% comment %} <button class="btn btn-info" id="{{f.pk}}" name="edit">Edit</button> {% endcomment %}
+                    </td>
                 </tr>
             {% endfor %}
           </tbody>
         </table>
     </div>
 
-    {% comment %} <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     {% load static %}
     <script>
         var CSRF_TOKEN = '{{ csrf_token }}';
-        var URL = "{% url 'add_to_cart' %}"
+        var URL = "{% url 'show_menu' %}"
     </script>
     
-    <script src={% static 'add_food_cart.js' %}></script> {% endcomment %}
+    <script src={% static 'edit_menu.js' %}></script>
 </body>
 </html>

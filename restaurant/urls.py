@@ -11,6 +11,8 @@ urlpatterns = [
     path('register/staff/', register, name='register_staff'),
     path('add/branch/', add_branch, name='add_branch'),
     path('show/menu/', show_menu, name='show_menu'),
+    path('add/to/menu/', add_to_menu, name='add_to_menu'),
+    # path('edit/item/<int:pk>', edit, name='edit_item'),
 ]
 
 if settings.DEBUG:
