@@ -19,6 +19,7 @@
         <a class="btn btn-outline-dark" href="{% url 'home' %}">Home</a>
         <br>
         <br>
+        {% if staff == "no" %}
         <h2>All Order Items</h2>         
         <table class="table table-bordered">
           <thead>
@@ -79,6 +80,9 @@
             <br>
             <h5>Don't have an account?</h5>
             <a class="btn btn-danger" href="{% url 'register' %}">Register</a>
+        {% endif %}
+        {% else %}
+            <h3>Your account is a bussiness account, please register as a customer to shop</h3>
         {% endif %}
     </div>
     

@@ -35,7 +35,7 @@
     }
     document.cookie = 'device=' + device + ";domain=;path=/"
   </script>
-  {% block script %}{% endblock script %}
+  {% comment %} {% block script %}{% endblock script %} {% endcomment %}
   <style>
     .navbar {
       margin-bottom: 50px;
@@ -57,6 +57,7 @@
 {% block header %}{% endblock header %}
 {% block content %}{% endblock content %}
 {% block footer %}{% endblock footer %}
+{% block script %}{% endblock script %}
 
 </body>
 </html>

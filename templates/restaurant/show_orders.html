@@ -58,15 +58,5 @@
           </tbody>
         </table>
     </div>
-{% comment %}     
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    {% load static %}
-    <script>
-        var CSRF_TOKEN = '{{ csrf_token }}';
-        var URL = "{% url 'invoice' %}";
-        var URL2 = "{% url 'delete_item' %}";
-    </script>
-    
-    <script src={% static 'invoice.js' %}></script> {% endcomment %}
 </body>
 </html>

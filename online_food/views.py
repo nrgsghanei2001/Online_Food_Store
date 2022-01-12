@@ -1,21 +1,43 @@
 from django.db import models
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.generic import ListView, DetailView, TemplateView, detail
 from rest_framework import generics, viewsets, permissions, response, status
 from rest_framework.views import APIView
 from accounts.models import Customer
+from restaurant.models import Staff
 from .serializers import *
 from online_food.models import *
 from foods.models import *
-from rest_framework.renderers import TemplateHTMLRenderer
-from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from django.shortcuts import redirect
-from django.contrib import messages
+
 
 
 def home_page(request):
+    if request.method == 'POST'  and request.is_ajax():
+        text = request.POST.get('name')
+        print(text)
+        # search(request, text)
+        p = list(MenuItem.objects.filter(food__name=text))
+        counter = 1
+        context = {}
+        for i in p:
+            x = {'name':i.food.name, 'price':i.price, 'id':i.id, 'link': i.menus.last().branches.id}
+            key = str(counter)
+            context[key] = x
+            counter += 1
+
+        return JsonResponse(context)
+        # return redirect(request, 'online_food/home.html', context)
+        # if p:
+        #     return JsonResponse({
+        #         'items':list(p.values_list('food__name', flat=True))
+        #     })
+        # else:
+        #     return JsonResponse({
+        #         'items': [],
+        #         'msg' : "doesn't match any thing",
+        #     })
+
     queryset = MenuItem.objects.filter().order_by('-order_time')[:3]
     queryset2 = Branch.objects.filter().order_by('-order_time')[:3]
     context = {'populars' : queryset,
@@ -88,15 +110,72 @@ def add_to_cart(request):
     return JsonResponse({})
 
 def cart(request):
+    device = request.COOKIES['device']
     try:
-        customer = Customer.objects.get(user=request.user)
-    except:
-        device = request.COOKIES['device']
         customer = Customer.objects.get(device=device)
-    order = Order.objects.filter(customer=customer)
+        try:
+            order_x = Order.objects.get(customer=customer)
+            try:
+                r_customer = Customer.objects.get(user=request.user)
+                try:
+                    order = Order.objects.get(customer=r_customer)
+                    for ord in order_x.menu.all():
+                        order.menu.add(ord)
+                    order_x.delete()
+                    customer.delete()
+                    customer = r_customer
+                    customer.save()
+                    print(customer)
+                except:
+                    order_x.customer = r_customer
+                    order_x.save()
+                    customer.delete()
+                    order = order_x
+            except:
+                order = order_x
+        except:
+            order = []
+    except:
+        try:
+            customer = Customer.objects.get(user=request.user)
+            try:
+                order = Order.objects.get(customer=customer)
+            except:
+                order = []
+        except:
+            customer = Customer.objects.create(device=device)
+            order = []
+    if order != []:
+        order_z = []
+        order_z.append(order)
+        order = order_z
+
     context = {'order': order,
-    'customer':customer,}
+    'customer':customer,
+    'staff':'no'}
     return render(request, 'online_food/cart.html', context)
+    # try:
+    #     try:
+    #         customer = Customer.objects.get(user=request.user)
+    #         staff = "no"
+    #     except:
+    #         customer = Staff.objects.get(user=request.user)
+    #         staff = "yes"
+    # except:
+    #     device = request.COOKIES['device']
+    #     try:
+    #         customer = Customer.objects.get(device=device)
+    #     except:
+    #         customer = Customer.objects.create(device=device)
+    #     staff = "no"
+    # if staff == 'no':
+    #     order = Order.objects.filter(customer=customer)
+    # else:
+    #     order = []
+    # context = {'order': order,
+    # 'customer':customer,
+    # 'staff':staff}
+    # return render(request, 'online_food/cart.html', context)
 
 
 def invoice(request):
@@ -155,4 +234,18 @@ def all_orders(request):
         'delivered_orders':delivered_orders,
     }
     return render(request, 'online_food/all_orders.html', context)
+
+
+def search(request):
+    if request.method == 'POST'  and request.is_ajax():
+        text = request.POST
+        # print(text)
+        name = text['name']
+        # print(name,"pp")
+        items = MenuItem.objects.filter(food__name=name)
+        print(items)
+        context = {'searched':items}
+        return render(request, 'online_food/home2.html', context)
+    return render(request, 'online_food/home2.html')
+
 

@@ -1,0 +1,14 @@
+{% extends './home.html' %}
+{% block search %}
+<h1>hi</h1>
+    {% for food in searched %}
+      <h1>hi</h1>
+      <div class="col-sm-4">
+        <div class="panel panel-primary">
+          <div class="panel-heading"><a href={% url 'restaurants_menu' food.menus.last.branches.pk %}></a></div>
+          <div class="panel-body"><img src="/media/{{food.food.image}}" class="img-responsive" style="height:200px;width:250px;border-radius: 8px;" alt="Image"></div>
+          <div class="panel-footer">{{food.food.name}}</div>
+        </div>
+      </div>
+    {% endfor %} 
+{% endblock search %}

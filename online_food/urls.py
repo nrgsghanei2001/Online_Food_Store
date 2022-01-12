@@ -20,6 +20,7 @@ urlpatterns = [
     path('invoices/', invoice, name='invoice'),
     path('delete/item/', delete_item, name='delete_item'),
     path('all/orders/', all_orders, name='all_orders'),
+    path('search/', search, name='search'), 
 ]
 
 if settings.DEBUG:
