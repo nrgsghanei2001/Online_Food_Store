@@ -55,21 +55,12 @@
       <label for="text">Search a food here</label>
       <br>
       <input id="in_text" type="text" name="text">
-      <button class="btn btn-success" id="search">Search</button>
+      <button class="btn btn-info" id="search">Search</button>
       <a href="{% url 'home' %}"></a>
     </form>
     <ul id="mu_ul"></ul>
-    {% comment %} {% block search %}{% endblock search %} {% endcomment %}
-      {% comment %} {% for food in searched %}
-      <h1>hi</h1>
-      <div class="col-sm-4">
-        <div class="panel panel-primary">
-          <div class="panel-heading"><a href={% url 'restaurants_menu' food.menus.last.branches.pk %}></a></div>
-          <div class="panel-body"><img src="/media/{{food.food.image}}" class="img-responsive" style="height:200px;width:250px;border-radius: 8px;" alt="Image"></div>
-          <div class="panel-footer">{{food.food.name}}</div>
-        </div>
-      </div>
-     {% endfor %} {% endcomment %}
+    <div class="row" id="searched">
+    </div>
     <hr>
   </div>    
     <div class="row">

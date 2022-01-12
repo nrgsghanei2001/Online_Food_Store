@@ -21,22 +21,13 @@ def home_page(request):
         counter = 1
         context = {}
         for i in p:
-            x = {'name':i.food.name, 'price':i.price, 'id':i.id, 'link': i.menus.last().branches.id}
+            y = str(i.food.image)
+            x = {'name':i.food.name, 'price':i.price, 'link': i.menus.last().branches.id, 'img': y}
             key = str(counter)
             context[key] = x
             counter += 1
 
         return JsonResponse(context)
-        # return redirect(request, 'online_food/home.html', context)
-        # if p:
-        #     return JsonResponse({
-        #         'items':list(p.values_list('food__name', flat=True))
-        #     })
-        # else:
-        #     return JsonResponse({
-        #         'items': [],
-        #         'msg' : "doesn't match any thing",
-        #     })
 
     queryset = MenuItem.objects.filter().order_by('-order_time')[:3]
     queryset2 = Branch.objects.filter().order_by('-order_time')[:3]
@@ -235,17 +226,5 @@ def all_orders(request):
     }
     return render(request, 'online_food/all_orders.html', context)
 
-
-def search(request):
-    if request.method == 'POST'  and request.is_ajax():
-        text = request.POST
-        # print(text)
-        name = text['name']
-        # print(name,"pp")
-        items = MenuItem.objects.filter(food__name=name)
-        print(items)
-        context = {'searched':items}
-        return render(request, 'online_food/home2.html', context)
-    return render(request, 'online_food/home2.html')
 
 
