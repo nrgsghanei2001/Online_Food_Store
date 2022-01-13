@@ -1,5 +1,6 @@
 from django.db import models
 from django.http import JsonResponse
+from django.http.response import HttpResponseForbidden
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, DetailView, TemplateView, detail
 from rest_framework import generics, viewsets, permissions, response, status
@@ -86,8 +87,15 @@ def add_to_cart(request):
                     obj.menu.add(order_item)
                     obj.total_price = new_price
                     obj.save()
-                elif obj.restaurant != branch:
+                    break;
+                elif obj.customer == customer and obj.customers_status == 'a' and obj.restaurant != branch:
                     obj.delete()
+                    break;
+                elif obj.customer == customer and obj.customers_status != 'a':
+                    flag = True
+                    order = Order.objects.create(customer=customer, restaurant=branch, total_price=price)
+                    order.menu.add(order_item)
+                    break;
                     
             if not flag:
                 order = Order.objects.create(customer=customer, restaurant=branch, total_price=price)
@@ -101,72 +109,83 @@ def add_to_cart(request):
     return JsonResponse({})
 
 def cart(request):
-    device = request.COOKIES['device']
-    try:
-        customer = Customer.objects.get(device=device)
-        try:
-            order_x = Order.objects.get(customer=customer)
-            try:
-                r_customer = Customer.objects.get(user=request.user)
-                try:
-                    order = Order.objects.get(customer=r_customer)
-                    for ord in order_x.menu.all():
-                        order.menu.add(ord)
-                    order_x.delete()
-                    customer.delete()
-                    customer = r_customer
-                    customer.save()
-                    print(customer)
-                except:
-                    order_x.customer = r_customer
-                    order_x.save()
-                    customer.delete()
-                    order = order_x
-            except:
-                order = order_x
-        except:
-            order = []
-    except:
-        try:
-            customer = Customer.objects.get(user=request.user)
-            try:
-                order = Order.objects.get(customer=customer)
-            except:
-                order = []
-        except:
-            customer = Customer.objects.create(device=device)
-            order = []
-    if order != []:
-        order_z = []
-        order_z.append(order)
-        order = order_z
-
-    context = {'order': order,
-    'customer':customer,
-    'staff':'no'}
-    return render(request, 'online_food/cart.html', context)
+    # device = request.COOKIES['device']
     # try:
+    #     customer = Customer.objects.get(device=device)
+    #     try:
+    #         order_x = Order.objects.get(customer=customer)
+    #         try:
+    #             r_customer = Customer.objects.get(user=request.user)
+    #             try:
+    #                 order = Order.objects.get(customer=r_customer)
+    #                 for ord in order_x.menu.all():
+    #                     order.menu.add(ord)
+    #                 order_x.delete()
+    #                 customer.delete()
+    #                 customer = r_customer
+    #                 customer.save()
+    #                 print(customer)
+    #             except:
+    #                 order_x.customer = r_customer
+    #                 order_x.save()
+    #                 customer.delete()
+    #                 order = order_x
+    #         except:
+    #             order = order_x
+    #     except:
+    #         order = []
+    # except:
     #     try:
     #         customer = Customer.objects.get(user=request.user)
-    #         staff = "no"
-    #     except:
-    #         customer = Staff.objects.get(user=request.user)
-    #         staff = "yes"
-    # except:
-    #     device = request.COOKIES['device']
-    #     try:
-    #         customer = Customer.objects.get(device=device)
+    #         try:
+    #             order = Order.objects.get(customer=customer)
+    #         except:
+    #             order = []
     #     except:
     #         customer = Customer.objects.create(device=device)
-    #     staff = "no"
-    # if staff == 'no':
-    #     order = Order.objects.filter(customer=customer)
-    # else:
-    #     order = []
+    #         order = []
+    # if order != []:
+    #     order_z = []
+    #     order_z.append(order)
+    #     order = order_z
+
     # context = {'order': order,
     # 'customer':customer,
-    # 'staff':staff}
+    # 'staff':'no'}
     # return render(request, 'online_food/cart.html', context)
+    device = request.COOKIES['device']
+    try:
+        try:
+            customer = Customer.objects.get(user=request.user)
+            staff = "no"
+            try:
+                cutomer2 = Customer.objects.get(device=device)
+                try:
+                    order2 = Order.objects.get(customer=cutomer2)
+                    order2.customer = customer
+                    order2.save()
+                    cutomer2.delete()
+                except:
+                    cutomer2.delete()
+            except:
+                pass
+        except:
+            customer = Staff.objects.get(user=request.user)
+            staff = "yes"
+    except:
+        try:
+            customer = Customer.objects.get(device=device)
+        except:
+            customer = Customer.objects.create(device=device)
+        staff = "no"
+    if staff == 'no':
+        order = Order.objects.filter(customer=customer)
+    else:
+        order = []
+    context = {'order': order,
+    'customer':customer,
+    'staff':staff}
+    return render(request, 'online_food/cart.html', context)
 
 
 def invoice(request):
@@ -215,16 +234,19 @@ def delete_item(request):
 
 
 def all_orders(request):
-    customer = Customer.objects.get(user=request.user)
-    confirmed_orders = Order.objects.filter(customers_status='c', customer=customer)
-    is_sending_orders = Order.objects.filter(customers_status='s', customer=customer)
-    delivered_orders = Order.objects.filter(customers_status='d', customer=customer)
-    context = {
-        'confirmed_orders':confirmed_orders,
-        'is_sending_orders':is_sending_orders,
-        'delivered_orders':delivered_orders,
-    }
-    return render(request, 'online_food/all_orders.html', context)
+    try:
+        customer = Customer.objects.get(user=request.user)
+        confirmed_orders = Order.objects.filter(customers_status='c', customer=customer)
+        is_sending_orders = Order.objects.filter(customers_status='s', customer=customer)
+        delivered_orders = Order.objects.filter(customers_status='d', customer=customer)
+        context = {
+            'confirmed_orders':confirmed_orders,
+            'is_sending_orders':is_sending_orders,
+            'delivered_orders':delivered_orders,
+        }
+        return render(request, 'online_food/all_orders.html', context)
+    except:
+        return HttpResponseForbidden("This page is not supperted for staffs")
 
 
 
