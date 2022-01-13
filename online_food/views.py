@@ -205,4 +205,7 @@ def all_orders(request):
         return HttpResponseForbidden("This page is not supperted for staffs")
 
 
-
+def show_all_foods(request):
+    menu_items = MenuItem.objects.all()
+    context = {'items': menu_items}
+    return render(request, 'online_food/show_all_foods.html', context)
