@@ -55,24 +55,26 @@ def add_branch(request):
     return render(request, 'accounts/add_branch.html', context)
 
 
-# def edit(request, pk):
-#     # if num != 0:
-#     #     print("dang")
-#     #     print(request)
-#     #     return render(request, 'online_food/base.html')
-#         # return render(request, 'restaurant/edit_menu.html')
+def edit(request):
+    if request.method == 'POST' and request.is_ajax():
+        text = request.POST
+        print(text)
+        item_id = text['name']
+        item = MenuItem.objects.get(id=item_id)
+        if text['price'] != "":
+            price = float(text['price'])
+            item.price = price
+            item.save()
+        if text['number'] != "":
+            number = int(text['number'])
+            item.number_of_existance = number
+            item.save()
+        return JsonResponse({})
 
-#     if request.method == 'POST'  and request.is_ajax():
-#         text = request.POST
-#         name = text['name']
-#         price = text['price']
-#         food = MenuItem.objects.get(id=pk)
-#         if food.price != "":
-#             food.price = price
-#         food.save()
-#         return JsonResponse({})
-
-#     return render(request, 'restaurant/edit_menu.html')
+    staff = Staff.objects.get(user=request.user)
+    items = staff.restaurant.menu.item.all()
+    context = {'items':items}
+    return render(request, 'restaurant/edit_menu.html', context)
 
 
 def show_menu(request):
@@ -82,13 +84,7 @@ def show_menu(request):
         if action == 'delete':
             menu_item = MenuItem.objects.get(id=text['item_id'])
             menu_item.delete()
-        # else:
-        #     print('ding')
-        #     return render(request, 'restaurant/edit_menu.html')
-            # edit(request, 1)
-            # return JsonResponse({})
-
-        return JsonResponse({})
+            return JsonResponse({})
 
     staff = Staff.objects.get(user=request.user)
     try:

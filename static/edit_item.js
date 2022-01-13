@@ -7,8 +7,9 @@ $( document ).ready(function() {
     function send_ajax(){
         data={
             'csrfmiddlewaretoken':CSRF_TOKEN,
-            'name' : $("#name").val(),
+            'number' : $("#number").val(),
             'price': $("#price").val(),
+            'name' :$("#name :selected").val(),
             };
         console.log(data);
         alert("edited")

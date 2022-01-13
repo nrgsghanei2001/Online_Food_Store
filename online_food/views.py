@@ -109,50 +109,6 @@ def add_to_cart(request):
     return JsonResponse({})
 
 def cart(request):
-    # device = request.COOKIES['device']
-    # try:
-    #     customer = Customer.objects.get(device=device)
-    #     try:
-    #         order_x = Order.objects.get(customer=customer)
-    #         try:
-    #             r_customer = Customer.objects.get(user=request.user)
-    #             try:
-    #                 order = Order.objects.get(customer=r_customer)
-    #                 for ord in order_x.menu.all():
-    #                     order.menu.add(ord)
-    #                 order_x.delete()
-    #                 customer.delete()
-    #                 customer = r_customer
-    #                 customer.save()
-    #                 print(customer)
-    #             except:
-    #                 order_x.customer = r_customer
-    #                 order_x.save()
-    #                 customer.delete()
-    #                 order = order_x
-    #         except:
-    #             order = order_x
-    #     except:
-    #         order = []
-    # except:
-    #     try:
-    #         customer = Customer.objects.get(user=request.user)
-    #         try:
-    #             order = Order.objects.get(customer=customer)
-    #         except:
-    #             order = []
-    #     except:
-    #         customer = Customer.objects.create(device=device)
-    #         order = []
-    # if order != []:
-    #     order_z = []
-    #     order_z.append(order)
-    #     order = order_z
-
-    # context = {'order': order,
-    # 'customer':customer,
-    # 'staff':'no'}
-    # return render(request, 'online_food/cart.html', context)
     device = request.COOKIES['device']
     try:
         try:

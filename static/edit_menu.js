@@ -3,10 +3,12 @@ $( document ).ready(function() {
         item_id = e.target.id;
         if (e.target.name == "delete") {
             action = "delete"
+            UR = URL
             send_ajax()
         }
         else {
             action = "edit"
+            UR = URL2
             send_ajax()
         }
     });
@@ -22,7 +24,7 @@ $( document ).ready(function() {
 
         $.ajax({
             type: 'POST',
-            url: URL,
+            url: UR,
             dataType: 'json',
             data:data,
             
