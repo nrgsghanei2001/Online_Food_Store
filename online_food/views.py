@@ -10,14 +10,13 @@ from restaurant.models import Staff
 from .serializers import *
 from online_food.models import *
 from foods.models import *
-
+from .permissions import *
 
 
 def home_page(request):
     if request.method == 'POST'  and request.is_ajax():
         text = request.POST.get('name')
         print(text)
-        # search(request, text)
         p = list(MenuItem.objects.filter(food__name=text))
         counter = 1
         context = {}
@@ -38,7 +37,11 @@ def home_page(request):
 
 
 def admin_page(request):
-    return render(request, 'online_food/admin.html')
+    perm = AdminPannel()
+    if perm.has_perm(request):
+        return render(request, 'online_food/admin.html')
+    else:
+        return HttpResponseForbidden("You are not allowed!")
 
 
 class AllRestaurants(ListView):
@@ -57,137 +60,153 @@ class Menu(DetailView):
 
 
 def add_to_cart(request):
-    if request.method == 'POST'  and request.is_ajax():
-        text = request.POST
-        menu_item=text.get('menu_item')
-        menu_item = MenuItem.objects.get(id=menu_item)
-        number=text.get('number')
-        if int(number) <= menu_item.number_of_existance:
-            menu_item.order_time += int(number)
-            menu_item.number_of_existance -= int(number)
-            menu_item.save()
-            branch = menu_item.menus.last().branches
-            branch.order_time += int(number)
-            branch.save()
-            price = int(number) * menu_item.price
-            try:
-                customer = Customer.objects.get(user=request.user)
-            except:
-                device = request.COOKIES['device']
+    perm = CartOperations()
+    if perm.has_perm(request):
+        if request.method == 'POST'  and request.is_ajax():
+            text = request.POST
+            menu_item=text.get('menu_item')
+            menu_item = MenuItem.objects.get(id=menu_item)
+            number=text.get('number')
+            if int(number) <= menu_item.number_of_existance:
+                menu_item.order_time += int(number)
+                menu_item.number_of_existance -= int(number)
+                menu_item.save()
+                branch = menu_item.menus.last().branches
+                branch.order_time += int(number)
+                branch.save()
+                price = int(number) * menu_item.price
                 try:
-                    customer = Customer.objects.get(device=device)
+                    customer = Customer.objects.get(user=request.user)
                 except:
-                    customer = Customer.objects.create(device=device)
-            flag = False 
-            order_item = OrderItem.objects.create(item=menu_item, number=number, price=price)
-            for obj in Order.objects.all():
-                if obj.customer == customer and obj.customers_status == 'a' and obj.restaurant == branch:
-                    flag = True
-                    new_price = obj.total_price + price
-                    obj.menu.add(order_item)
-                    obj.total_price = new_price
-                    obj.save()
-                    break;
-                elif obj.customer == customer and obj.customers_status == 'a' and obj.restaurant != branch:
-                    obj.delete()
-                    break;
-                elif obj.customer == customer and obj.customers_status != 'a':
-                    flag = True
+                    device = request.COOKIES['device']
+                    try:
+                        customer = Customer.objects.get(device=device)
+                    except:
+                        customer = Customer.objects.create(device=device)
+                flag = False 
+                order_item = OrderItem.objects.create(item=menu_item, number=number, price=price)
+                for obj in Order.objects.all():
+                    if obj.customer == customer and obj.customers_status == 'a' and obj.restaurant == branch:
+                        flag = True
+                        new_price = obj.total_price + price
+                        obj.menu.add(order_item)
+                        obj.total_price = new_price
+                        obj.save()
+                        break;
+                    elif obj.customer == customer and obj.customers_status == 'a' and obj.restaurant != branch:
+                        obj.delete()
+                        break;
+                    elif obj.customer == customer and obj.customers_status != 'a':
+                        flag = True
+                        order = Order.objects.create(customer=customer, restaurant=branch, total_price=price)
+                        order.menu.add(order_item)
+                        break;
+                        
+                if not flag:
                     order = Order.objects.create(customer=customer, restaurant=branch, total_price=price)
                     order.menu.add(order_item)
-                    break;
-                    
-            if not flag:
-                order = Order.objects.create(customer=customer, restaurant=branch, total_price=price)
-                order.menu.add(order_item)
 
-            return JsonResponse({})
-        else:
-            context = {'error':"There is not exist this much of the food you chose!"}
-            return render(request, 'online_food/restaurants_menu.html', context)
+                return JsonResponse({})
+            else:
+                context = {'error':"There is not exist this much of the food you chose!"}
+                return render(request, 'online_food/restaurants_menu.html', context)
 
-    return JsonResponse({})
+        return JsonResponse({})
+    else:
+        return HttpResponseForbidden("You should log in as a customer!")
 
 def cart(request):
-    device = request.COOKIES['device']
-    try:
+    perm = CartOperations()
+    if perm.has_perm(request):
+        device = request.COOKIES['device']
         try:
-            customer = Customer.objects.get(user=request.user)
-            staff = "no"
             try:
-                cutomer2 = Customer.objects.get(device=device)
+                customer = Customer.objects.get(user=request.user)
+                staff = "no"
                 try:
-                    order2 = Order.objects.get(customer=cutomer2)
-                    order2.customer = customer
-                    order2.save()
-                    cutomer2.delete()
+                    cutomer2 = Customer.objects.get(device=device)
+                    try:
+                        order2 = Order.objects.get(customer=cutomer2)
+                        order2.customer = customer
+                        order2.save()
+                        cutomer2.delete()
+                    except:
+                        cutomer2.delete()
                 except:
-                    cutomer2.delete()
+                    pass
             except:
-                pass
+                customer = Staff.objects.get(user=request.user)
+                staff = "yes"
         except:
-            customer = Staff.objects.get(user=request.user)
-            staff = "yes"
-    except:
-        try:
-            customer = Customer.objects.get(device=device)
-        except:
-            customer = Customer.objects.create(device=device)
-        staff = "no"
-    if staff == 'no':
-        order = Order.objects.filter(customer=customer)
+            try:
+                customer = Customer.objects.get(device=device)
+            except:
+                customer = Customer.objects.create(device=device)
+            staff = "no"
+        if staff == 'no':
+            order = Order.objects.filter(customer=customer)
+        else:
+            order = []
+        context = {'order': order,
+        'customer':customer,
+        'staff':staff}
+        return render(request, 'online_food/cart.html', context)
     else:
-        order = []
-    context = {'order': order,
-    'customer':customer,
-    'staff':staff}
-    return render(request, 'online_food/cart.html', context)
+        return HttpResponseForbidden("You should log in as a customer!")
 
 
 def invoice(request):
-    if request.method == 'POST'  and request.is_ajax():
-        flag = False
-        text = request.POST
-        address_id = text['address']
-        address = Address.objects.get(id=address_id)
-        for order in Order.objects.all():
-            if order.customer.user == request.user:
-                for invoice in Invoice.objects.all():
-                    if invoice.customer.user == request.user:
+    perm = CartOperations()
+    if perm.has_perm_logged_in(request):
+        if request.method == 'POST'  and request.is_ajax():
+            flag = False
+            text = request.POST
+            address_id = text['address']
+            address = Address.objects.get(id=address_id)
+            for order in Order.objects.all():
+                if order.customer.user == request.user:
+                    for invoice in Invoice.objects.all():
+                        if invoice.customer.user == request.user:
+                            order.address = address
+                            order.save()
+                            invoice.foods.add(order)
+                            flag = True
+                            order.customers_status = 'c'
+                            order.total_price = 0
+                            order.save()
+                            break;
+                    if not flag:
+                        customer = Customer.objects.get(user=request.user)
+                        new_invoice = Invoice.objects.create(customer=customer)
                         order.address = address
                         order.save()
-                        invoice.foods.add(order)
-                        flag = True
+                        new_invoice.foods.add(order)
                         order.customers_status = 'c'
                         order.total_price = 0
                         order.save()
-                        break;
-                if not flag:
-                    customer = Customer.objects.get(user=request.user)
-                    new_invoice = Invoice.objects.create(customer=customer)
-                    order.address = address
-                    order.save()
-                    new_invoice.foods.add(order)
-                    order.customers_status = 'c'
-                    order.total_price = 0
-                    order.save()
-                    break
-        return JsonResponse({})
+                        break
+            return JsonResponse({})
 
-    return JsonResponse({})
+        return JsonResponse({})
+    else:
+        return HttpResponseForbidden("You should log in as a customer!")
 
 
 def delete_item(request):
-    if request.method == 'POST'  and request.is_ajax():
-        text = request.POST
-        order_item = OrderItem.objects.get(pk=text['order_item'])
-        order = order_item.orders.last()
-        order.total_price -= order_item.price
-        order_item.delete()
-        order.save()
+    perm = CartOperations()
+    if perm.has_perm(request):
+        if request.method == 'POST'  and request.is_ajax():
+            text = request.POST
+            order_item = OrderItem.objects.get(pk=text['order_item'])
+            order = order_item.orders.last()
+            order.total_price -= order_item.price
+            order_item.delete()
+            order.save()
+            return render(request, 'online_food/cart.html')
         return render(request, 'online_food/cart.html')
-    return render(request, 'online_food/cart.html')
-
+    else:
+        return HttpResponseForbidden("You should log in as a customer!")
+        
 
 def all_orders(request):
     try:

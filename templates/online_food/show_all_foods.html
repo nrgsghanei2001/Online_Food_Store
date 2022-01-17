@@ -30,13 +30,15 @@
           </thead>
           <tbody>
             {% for food in items %}
+              {% if food.menus.last.branches.restaurant %}
                 <tr>
                     <td>{{food.food.name}}</td>
                     <td><img src="/media/{{food.food.image}}" alt="" style="height:200px;width:250px;border-radius: 8px;"></td>
                     <td>
-                        <a class="btn btn-info" href="{% url 'restaurants_menu' food.menus.last.branches.pk %}">Go to menu</a>
+                        <a class="btn btn-info" href="{% url 'restaurants_menu' food.menus.first.branches.pk %}">Go to menu</a>
                     </td>
                 </tr>
+              {% endif %}
             {% endfor %}
           </tbody>
         </table>
