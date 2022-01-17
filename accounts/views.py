@@ -2,12 +2,12 @@ from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
 from django.views import generic
 from django.contrib import messages
-
 from restaurant.models import Staff
 from .forms import RegisterForm
 from online_food.urls import *
 from .models import *
 from django.contrib.auth.models import User
+from .permissions import *
 
 
 def SignupPageView(req):
@@ -24,7 +24,6 @@ def register(request):
             form.save()
             user = form.cleaned_data.get('username')
             user2 = User.objects.get(username=user)
-            # device = request.COOKIES['device']
             customer = Customer.objects.create(user=user2)
             messages.success(request, 'Account was created for ' + user)
             return redirect('home')
@@ -51,37 +50,44 @@ def profile(request):
 
 
 def edit_info(request):
-    if request.method == 'POST'  and request.is_ajax():
-        text = request.POST
-        email = text['email']
-        city = text['city']
-        address1 = text['address']
-        address = ""
-        if city != "":
-            address = Address.objects.create(city=city, address=address1)
-        customer = Customer.objects.get(user=request.user)
-        if email != "":
-            customer.email = email
-        if address != "":
-            customer.address.add(address)
-        customer.save()
-        print(text)
-        return JsonResponse({})
+    perm = EditInfo()
+    if perm.has_perm(request):
+        if request.method == 'POST'  and request.is_ajax():
+            text = request.POST
+            email = text['email']
+            city = text['city']
+            address1 = text['address']
+            address = ""
+            if city != "":
+                address = Address.objects.create(city=city, address=address1)
+            customer = Customer.objects.get(user=request.user)
+            if email != "":
+                customer.email = email
+            if address != "":
+                customer.address.add(address)
+            customer.save()
+            print(text)
+            return JsonResponse({})
 
-    customer = Customer.objects.get(user=request.user)
-    context = {'customer':customer}
-    return render(request, 'accounts/edit_info.html' , context)
+        customer = Customer.objects.get(user=request.user)
+        context = {'customer':customer}
+        return render(request, 'accounts/edit_info.html' , context)
+    else:
+        return HttpResponseForbidden("You are not allowed. please login as a customer!")
 
 
 def remove_address(request):
-    if request.method == 'POST'  and request.is_ajax():
-        text = request.POST
-        address1 = text['address_id']
-        address = Address.objects.get(id=address1)
-        address.delete()
-        print(address)
+    perm = EditInfo()
+    if perm.has_perm(request):
+        if request.method == 'POST'  and request.is_ajax():
+            text = request.POST
+            address1 = text['address_id']
+            address = Address.objects.get(id=address1)
+            address.delete()
+            print(address)
+            return JsonResponse({})
+
         return JsonResponse({})
-
-    return JsonResponse({})
-
+    else:
+        return HttpResponseForbidden("You are not allowed. please login as a customer!")
 

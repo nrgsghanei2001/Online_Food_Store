@@ -98,14 +98,23 @@ def show_menu(request):
 def add_to_menu(request):
     if request.method == 'POST'  and request.is_ajax():
         text = request.POST
+        print(text)
         food_id = text['food']
         food = Food.objects.get(id=food_id)
         price = float(text['price'])
         numner = int(text['number'])
         menu_item = MenuItem.objects.create(food=food, price=price, number_of_existance=numner)
         staff = Staff.objects.get(user=request.user)
-        menu = staff.restaurant.menu.item.add(menu_item)
-        staff.restaurant.menu.save()
+        if not staff.restaurant.menu:
+            menuc = Menu.objects.create()
+            x = menuc.item.add(menu_item)
+            staff.restaurant.menu.create(item=menu_item)
+            # staff.restaurant.update(menu=x)
+            staff.restaurant.save()
+
+        else:
+            menu = staff.restaurant.menu.item.add(menu_item)
+            menu.save()
 
 
         return JsonResponse({})
