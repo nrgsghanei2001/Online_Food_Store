@@ -1,6 +1,9 @@
+from urllib.error import HTTPError
 from django.db import models
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.contrib import messages
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, TemplateView, detail
 from rest_framework import generics, viewsets, permissions, response, status
 from rest_framework.views import APIView
@@ -9,14 +12,17 @@ from online_food.models import *
 from foods.models import *
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from django.shortcuts import redirect
-from django.contrib import messages
+from .permissions import *
+from online_food.urls import *
+
+
+
 
 
 class AllFoods(APIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'foods/all_foods.html'
+    permission_classes = [AllFoods]
 
     def get(self, request):
         queryset = Food.objects.all()
@@ -24,87 +30,106 @@ class AllFoods(APIView):
 
 
 def add_food(request):
-    if request.method == 'POST'  and request.is_ajax():
-        text = request.POST
-        name = text['name']
-        detail = text['detail']
-        category = text['category']
-        category = Category.objects.get(name=category)
-        meal = text['meal']
-        meal = Meal.objects.get(meal=meal)
-        image = text['image']
-        food = Food.objects.create(name=name, detail=detail, meal=meal, image=image)
-        food.category.add(category)
-        food.save()
-        return JsonResponse({"text":text})
-    
-    categories = Category.objects.all()
-    meals = Meal.objects.all()
-    context = {'categories' : categories, 
-    'meals' : meals}
-    return render(request, 'foods/add_food.html', context)
+    perm = FoodOperations()
+    if perm.has_perm(request):
+        if request.method == 'POST'  and request.is_ajax():
+            text = request.POST
+            name = text['name']
+            detail = text['detail']
+            category = text['category']
+            category = Category.objects.get(name=category)
+            meal = text['meal']
+            meal = Meal.objects.get(meal=meal)
+            image = text['image']
+            food = Food.objects.create(name=name, detail=detail, meal=meal, image=image)
+            food.category.add(category)
+            food.save()
+            return JsonResponse({"text":text})
+        
+        categories = Category.objects.all()
+        meals = Meal.objects.all()
+        context = {'categories' : categories, 
+        'meals' : meals}
+        return render(request, 'foods/add_food.html', context)
+    else:
+        return HttpResponseForbidden("You are not allowed!")
 
 
 def add_category(request):
-    if request.method == 'POST'  and request.is_ajax():
-        text = request.POST
-        print(text)
-        category = Category.objects.create(name=text['name'])
-        return JsonResponse({"text":text})
-    return render(request, 'foods/add_category.html')
+    perm = FoodOperations()
+    if perm.has_perm(request):
+        if request.method == 'POST'  and request.is_ajax():
+            text = request.POST
+            print(text)
+            category = Category.objects.create(name=text['name'])
+            return JsonResponse({"text":text})
+        return render(request, 'foods/add_category.html')
+    else:
+        return HttpResponseForbidden("You are not allowed!")
 
 
 def delete_food(request):
-    if request.method == 'POST'  and request.is_ajax():
-        text = request.POST
-        food = Food.objects.get(pk=text['food'])
-        food.delete()
+    perm = FoodOperations()
+    if perm.has_perm(request):
+        if request.method == 'POST'  and request.is_ajax():
+            text = request.POST
+            food = Food.objects.get(pk=text['food'])
+            food.delete()
+            return JsonResponse({})
         return JsonResponse({})
-    return JsonResponse({})
+    else:
+        return HttpResponseForbidden("You are not allowed!")
 
 
 def edit(request, food_id=0, num=0):
-    if num != 0:
-        food = Food.objects.get(pk=food_id)
-        name = food.name
-        categories = Category.objects.all()
-        context = {'categories' : categories}
-        return render(request, 'foods/edit_food.html', context)
+    perm = FoodOperations()
+    if perm.has_perm(request):
+        if num != 0:
+            food = Food.objects.get(pk=food_id)
+            name = food.name
+            categories = Category.objects.all()
+            context = {'categories' : categories}
+            return render(request, 'foods/edit_food.html', context)
 
-    if request.method == 'POST'  and request.is_ajax():
-        text = request.POST
-        name = text['name']
-        detail = text['detail']
-        category = text['category']
-        meal = text['meal']
-        image = text['image']
-        food = Food.objects.get(name=name)
-        if category != "":
-            category = Category.objects.get(name=category)
-            food.category.add(category)
-        if meal != "":
-            meal = Meal.objects.get(meal=meal)
-            food.meal = meal
-        if detail != "":
-            food.detail = detail
-        if food.image != "":
-            food.image = image
-        food.save()
-        return JsonResponse({})
+        if request.method == 'POST'  and request.is_ajax():
+            text = request.POST
+            name = text['name']
+            detail = text['detail']
+            category = text['category']
+            meal = text['meal']
+            image = text['image']
+            food = Food.objects.get(name=name)
+            if category != "":
+                category = Category.objects.get(name=category)
+                food.category.add(category)
+            if meal != "":
+                meal = Meal.objects.get(meal=meal)
+                food.meal = meal
+            if detail != "":
+                food.detail = detail
+            if food.image != "":
+                food.image = image
+            food.save()
+            return JsonResponse({})
 
+        return render(request, 'online_food/home.html')
 
-    return render(request, 'online_food/home.html')
-
+    else:
+        return HttpResponseForbidden("You are not allowed!")
 
 
 def edit_food(request):
-    if request.method == 'POST'  and request.is_ajax():
-        text = request.POST
-        # print(text)
-        edit(request, text['food'], 1)
-        return JsonResponse({})
-    categories = Category.objects.all()
-    meals = Meal.objects.all()
-    context = {'categories' : categories,
-    'meals' : meals,}
-    return render(request, 'foods/edit_food.html' , context)
+    perm = FoodOperations()
+    if perm.has_perm(request):
+        if request.method == 'POST'  and request.is_ajax():
+            text = request.POST
+            edit(request, text['food'], 1)
+            return JsonResponse({})
+        categories = Category.objects.all()
+        meals = Meal.objects.all()
+        context = {'categories' : categories,
+        'meals' : meals,}
+        return render(request, 'foods/edit_food.html' , context)
+    
+    else:
+        return HttpResponseForbidden("You are not allowed!")
