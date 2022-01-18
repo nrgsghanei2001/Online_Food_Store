@@ -21,6 +21,21 @@
             <a class="btn btn-danger" href="{% url 'home' %}">Home</a>
             <br>
             <br>
+            <div class="row">
+              <form method="POST">
+                {% csrf_token %}
+                <label for="text">Search a restaurant here</label>
+                <br>
+                <input id="in_text" type="text" name="text">
+                <button class="btn btn-info" id="search">Search</button>
+                <a href="{% url 'all_restaurants' %}"></a>
+              </form>
+              <br>
+              <br>
+            </div>  
+            <div class="row" id="searched">
+            </div>
+            <hr>
             <h2>All Restaurants</h2>         
             <table class="table table-bordered">
               <thead>
@@ -32,7 +47,7 @@
                 </tr>
               </thead>
               <tbody>
-                  {% for obj in object_list %}
+                  {% for obj in branches %}
                     <tr>
                         <td>{{obj.restaurant}}</td>
                         <td>{{obj.category}}</td>
@@ -49,5 +64,10 @@
 <script src={% static 'js/popper.js' %}></script>
 <script src={% static 'js/bootstrap.min.js' %}></script>
 <script src={% static 'js/main.js' %}></script>
+<script>
+    var CSRF_TOKEN = '{{ csrf_token }}';
+    var URL = "{% url 'all_restaurants' %}"
+</script>
+<script src={% static 'search_restaurant.js' %}></script>
 </body>
 </html>

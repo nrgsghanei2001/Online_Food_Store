@@ -9,7 +9,7 @@ import os
 urlpatterns = [
     path('', home_page, name='home'),
     path('adminpannel/', admin_page, name='admin_page'),
-    path('all/restaurants/', AllRestaurants.as_view(), name='all_restaurants'),
+    path('all/restaurants/', AllRestaurants, name='all_restaurants'),
     path('all/restaurants/<int:pk>', RestaurantDetail.as_view(), name='restaurants_detail'),
     path('all/restaurants/menu/<int:pk>', Menu.as_view(), name='restaurants_menu'),
     path('cart/', cart, name='cart'),

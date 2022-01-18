@@ -44,9 +44,24 @@ def admin_page(request):
         return HttpResponseForbidden("You are not allowed!")
 
 
-class AllRestaurants(ListView):
-    model = Branch
-    template_name = 'online_food/all_restaurants.html' 
+def AllRestaurants(request):
+    if request.method == 'POST'  and request.is_ajax():
+        text = request.POST.get('name')
+        print(text)
+        p = list(Branch.objects.filter(restaurant__name__contains=text))
+        counter = 1
+        context = {}
+        for i in p:
+            x = {'name':i.restaurant.name, 'category':i.category.name, 'meal': i.meal.meal, 'link': i.id}
+            key = str(counter)
+            context[key] = x
+            counter += 1
+
+        return JsonResponse(context)
+
+    branches = Branch.objects.all()
+    context = {'branches':branches}
+    return render(request, 'online_food/all_restaurants.html', context)
 
 
 class RestaurantDetail(DetailView):
