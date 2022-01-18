@@ -8,6 +8,7 @@ import os
 
 urlpatterns = [
     path('', home_page, name='home'),
+    path('signup/choice/', signup_choice, name='signup_choice'),
     path('adminpannel/', admin_page, name='admin_page'),
     path('all/restaurants/', AllRestaurants, name='all_restaurants'),
     path('all/restaurants/<int:pk>', RestaurantDetail.as_view(), name='restaurants_detail'),

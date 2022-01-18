@@ -23,8 +23,9 @@ def register(request):
         if form.is_valid():
             form.save()
             user = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
             user2 = User.objects.get(username=user)
-            customer = Customer.objects.create(user=user2)
+            customer = Customer.objects.create(user=user2, email=email)
             messages.success(request, 'Account was created for ' + user)
             return redirect('home')
         else:

@@ -36,6 +36,10 @@ def home_page(request):
     return render(request, 'online_food/home.html' , context)
 
 
+def signup_choice(request):
+    return render(request, 'accounts/signup_choice.html')
+
+    
 def admin_page(request):
     perm = AdminPannel()
     if perm.has_perm(request):

@@ -38,8 +38,7 @@
             <li><a href={% url 'all_orders' %}><span class="glyphicon glyphicon-shopping-cart"></span>Processing Orders</a></li>
             {% else %}
             <li><a href={% url 'login' %}><span class="glyphicon glyphicon-user"></span>Log In</a></li>
-            <li><a href="{% url 'register' %}"><span class="glyphicon glyphicon-user"></span>Sign Up</a></li>
-            <li><a href="{% url 'register_staff' %}"><span class="glyphicon glyphicon-user"></span>Sign Up Staffs</a></li>
+            <li><a href="{% url 'signup_choice' %}"><span class="glyphicon glyphicon-user"></span>Sign Up</a></li>
             {% endif %}
           <li><a href={% url 'cart' %}><span class="glyphicon glyphicon-shopping-cart"></span> Cart</a></li>
         </ul>
