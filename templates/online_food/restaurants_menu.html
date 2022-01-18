@@ -20,8 +20,32 @@
         <a class="btn btn-danger" href="{% url 'restaurants_detail' branch.pk %}">Back</a>
         <br>
         <br>
-        <h2>Restaurant's Menu</h2>         
-        <table class="table table-bordered">
+        <h2>Restaurant's Menu</h2>
+        <div class="container mt-3; d-flex">
+            {% for f in branch.menu.item.all %}
+            <div class="card" style="width:300px">
+                <div class="card-header">{{f.food.name}}</div>
+                <div class="card-body">
+                    <img src="/media/{{f.food.image}}" alt="" style="height:200px;width:250px;border-radius: 8px;">
+                    <p><b>Price: {{f.price}}</b></p>
+                    <p>dateils: {{f.food.detail}}</p>
+                </div> 
+                <div class="card-footer">
+                    <form method="POST" id="form" action="{% url 'add_to_cart' %}">
+                        {% csrf_token %}
+                        <lable>number</lable>
+                        <input type="text" id="number_{{f.pk}}"> 
+                        <br>
+                        <br>
+                        <button type="button"  id="{{f.pk}}" class="btn btn-info">ADD TO CART</button>
+                        <a href="{% url 'restaurants_menu' branch.pk %}"></a>
+                    </form>
+                </div>
+            </div>
+            {% endfor %} 
+        </div>  
+              
+        {% comment %} <table class="table table-bordered">
           <thead>
             <tr>
               <th>Name</th>
@@ -59,7 +83,7 @@
                 </tr>
             {% endfor %}
           </tbody>
-        </table>
+        </table> {% endcomment %}
     </div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>

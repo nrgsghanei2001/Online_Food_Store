@@ -39,22 +39,23 @@ $( document ).ready(function() {
             div5.className = "panel-footer";
             ////////////
             var createA = document.createElement('a');
+            createA.className = "btn btn-warning";
             var createAText = document.createTextNode('show');
-            createA.style.color = "red";
+            createA.style.color = "black";
             createA.setAttribute('href', `/all/restaurants/${o['link']}`);
             createA.appendChild(createAText);
-            div3.append(createA);
             //////////
             var createA2 = document.createElement('h3');
             var createAText1 = document.createTextNode(`${o['name']}`);
             createA2.appendChild(createAText1);
-            div4.append(createA2);
             /////////
             var createA3 = document.createElement('p');
             var createAText2 = document.createTextNode(`category: ${o['category']}, meal: ${o['meal']}`);
             createA3.appendChild(createAText2);
             createA3.style.color = "black";
-            div5.append(createA3);
+            div3.append(createA2);
+            div4.append(createA3);
+            div5.append(createA);
             div1.append(div2);
             div2.append(div3);
             div2.append(div4);
