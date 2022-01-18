@@ -45,7 +45,8 @@ def add_branch(request):
             category1 = Category.objects.create(name=category)
             meal = Meal.objects.get(id=text['meal'])
             details = text['details']
-            branch = Branch.objects.create(restaurant=restaurant, address=address1, category=category1, meal=meal, details=details)
+            menu = Menu.objects.create()
+            branch = Branch.objects.create(restaurant=restaurant, address=address1, category=category1, menu=menu, meal=meal, details=details)
             staff = Staff.objects.get(user=request.user)
             staff.restaurant = branch
             staff.save()
@@ -121,14 +122,16 @@ def add_to_menu(request):
             numner = int(text['number'])
             menu_item = MenuItem.objects.create(food=food, price=price, number_of_existance=numner)
             staff = Staff.objects.get(user=request.user)
-            if not staff.restaurant.menu:
-                menuc = Menu.objects.create()
-                x = menuc.item.add(menu_item)
-                staff.restaurant.menu.create(item=menu_item)
-                staff.restaurant.save()
-            else:
-                menu = staff.restaurant.menu.item.add(menu_item)
-                menu.save()
+            menu = staff.restaurant.menu.item.add(menu_item)
+            # menu.save()
+            # if not staff.restaurant.menu:
+            #     menuc = Menu.objects.create()
+            #     x = menuc.item.add(menu_item)
+            #     staff.restaurant.menu.create(item=menu_item)
+            #     staff.restaurant.save()
+            # else:
+            #     menu = staff.restaurant.menu.item.add(menu_item)
+            #     menu.save()
 
             return JsonResponse({})
 
