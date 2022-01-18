@@ -18,7 +18,6 @@ def register(request):
             form.save()
             user = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
-            # print(email)
             user2 = User.objects.get(username=user)
             Staff.objects.create(user=user2, email=email)
             messages.success(request, 'Account was created for ' + user)
@@ -37,12 +36,12 @@ def add_branch(request):
     if perm.has_perm_add_branch(request):
         if request.method == 'POST'  and request.is_ajax():
             text = request.POST
+            print(text)
             restaurant = Restaurant.objects.get(id=text['restaurant'])
             city = text['city']
             address = text['address']
             address1 = Address.objects.create(city=city, address=address)
-            category = text['category']
-            category1 = Category.objects.create(name=category)
+            category1 = Category.objects.get(id=text['category'])
             meal = Meal.objects.get(id=text['meal'])
             details = text['details']
             menu = Menu.objects.create()
@@ -53,8 +52,10 @@ def add_branch(request):
             return JsonResponse({})
 
         meals = Meal.objects.all()
+        categories = Category.objects.all()
         restaurants = Restaurant.objects.all()
         context = {'meals':meals,
+        'categories':categories,
         'restaurants':restaurants,}
         return render(request, 'accounts/add_branch.html', context)
     
@@ -122,16 +123,7 @@ def add_to_menu(request):
             numner = int(text['number'])
             menu_item = MenuItem.objects.create(food=food, price=price, number_of_existance=numner)
             staff = Staff.objects.get(user=request.user)
-            menu = staff.restaurant.menu.item.add(menu_item)
-            # menu.save()
-            # if not staff.restaurant.menu:
-            #     menuc = Menu.objects.create()
-            #     x = menuc.item.add(menu_item)
-            #     staff.restaurant.menu.create(item=menu_item)
-            #     staff.restaurant.save()
-            # else:
-            #     menu = staff.restaurant.menu.item.add(menu_item)
-            #     menu.save()
+            staff.restaurant.menu.item.add(menu_item)
 
             return JsonResponse({})
 

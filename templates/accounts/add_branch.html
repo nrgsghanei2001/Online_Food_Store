@@ -43,7 +43,11 @@
       </div>
       <div class="form-group col-md-6">
         <label for="category"><b>category</b></label><br>
-        <input type="text" id="category" class="form-control" name="category" required>
+        <select name="category" id="category" class="form-control" required>
+          {% for obj in categories %}
+            <option value={{obj.pk}}>{{obj.name}}</option>
+          {% endfor %}
+      </select>
       </div>
       <div class="form-group col-md-6">
         <label for="meal"><b>meal</b></label><br>

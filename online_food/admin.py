@@ -25,10 +25,14 @@ class BranchAdmin(admin.ModelAdmin):
 
 @admin.register(MenuItem)
 class MenuItemAdmin(admin.ModelAdmin):
-    list_display = ['food', 'price', 'number_of_existance']
+    list_display = ['food', 'price', 'number_of_existance','menu']
     list_editable = ['price', 'number_of_existance']
     list_filter = ['food', 'price', 'number_of_existance']
     search_fields = ['food', 'price', 'number_of_existance']
+
+    @admin.display(description='menu')
+    def menu(self, obj):
+        return f"{obj.menus.last()}"
 
 
 @admin.register(Menu)

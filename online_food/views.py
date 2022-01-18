@@ -17,7 +17,7 @@ def home_page(request):
     if request.method == 'POST'  and request.is_ajax():
         text = request.POST.get('name')
         print(text)
-        p = list(MenuItem.objects.filter(food__name=text))
+        p = list(MenuItem.objects.filter(food__name__contains=text))
         counter = 1
         context = {}
         for i in p:

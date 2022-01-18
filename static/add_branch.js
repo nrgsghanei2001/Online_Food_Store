@@ -10,7 +10,7 @@ $( document ).ready(function() {
             'restaurant' : $("#restaurant :selected").val(),
             'city': $("#city").val(),
             'address' :$("#address").val(),
-            'category': $("#category").val(),
+            'category': $("#category :selected").val(),
             'meal': $("#meal :selected").val(),
             'details': $("#details").val(),
             };
