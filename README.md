@@ -9,7 +9,7 @@ The application features a user-friendly interface for both customers and admini
 
 - **Product Management:**
   - Admins can add, update, and delete food products.
-  - Products are categorized for easy navigation and search.
+  - Products are categorized for easy search.
 
 - **User Management:**
   - Users can register, log in, and manage their profiles.
@@ -23,8 +23,6 @@ The application features a user-friendly interface for both customers and admini
   - Advanced search functionality to find products based on various criteria.
   - Filters to sort products by category, price, and popularity.
 
-- **Responsive Design:**
-  - The application is designed to be fully responsive, providing an optimal viewing experience on various devices.
 
 ## Technologies Used
 
